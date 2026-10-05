@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>QuizLAN Pro v2.0.0 — Hệ Thống Thi Mạng LAN, Đấu Trường Live & Phổ Điểm Giáo Viên</title>
+    <meta name="description" content="Slide giới thiệu toàn diện hệ thống thi trắc nghiệm mạng nội bộ QuizLAN Pro v2.0.0. Thiết kế chuẩn GDPT 2018, 100% Offline Zero-Internet, Giám thị đa tầng, Đấu trường Live đường đua và Báo cáo phổ điểm đánh giá năng lực.">
+    <meta property="og:title" content="QuizLAN Pro v2.0.0 — Presentation Deck">
+    <meta name="theme-color" content="#0B0F19">
+
+    <!-- Fonts: Playfair Display for grand titles & numbers, Be Vietnam Pro for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome 6.5 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* ===== CORE DESIGN SYSTEM (THEME TOKENS) ===== */
+        :root, [data-theme="dark"] {
+            /* Master High-Tech Dark (Obsidian & Deep Indigo) - Tôn 100% chi tiết ảnh chụp phần mềm */
+            --bg: #0B0F19;
+            --bg-surface: #111827;
+            --fg: #F8FAFC;
+            --mu: #94A3B8;
+            --ac: #6366F1; /* Electric Indigo */
+            --ac-light: #818CF8;
+            --ac-glow: rgba(99, 102, 241, 0.4);
+            --go: #F59E0B; /* Bright Gold */
+            --te: #06B6D4; /* Cyan Accent */
+            --ln: rgba(255, 255, 255, 0.05);
+            --card-bg: rgba(17, 24, 39, 0.85);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --ph-bg: #0F172A;
+            --ph-border: rgba(99, 102, 241, 0.35);
+            --ph-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 35px -5px rgba(99, 102, 241, 0.25);
+            --radial-glow: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99, 102, 241, 0.15), transparent 70%);
+        }
+
+        [data-theme="light"] {
+            /* Studio Executive Slate (Titanium Light) - Sang trọng, trong trẻo, không bị ngả vàng */
+            --bg: #F8FAFC;
+            --bg-surface: #FFFFFF;
+            --fg: #0F172A;
+            --mu: #475569;
+            --ac: #4F46E5; /* Royal Indigo */
+            --ac-light: #6366F1;
+            --ac-glow: rgba(79, 70, 229, 0.25);
+            --go: #D97706; /* Warm Gold */
+            --te: #0284C7; /* Sky Blue */
+            --ln: rgba(15, 23, 42, 0.06);
+            --card-bg: #FFFFFF;
+            --card-border: rgba(15, 23, 42, 0.08);
+            --ph-bg: #1E293B;
+            --ph-border: rgba(79, 70, 229, 0.25);
+            --ph-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.18), 0 0 25px -5px rgba(79, 70, 229, 0.12);
+            --radial-glow: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(79, 70, 229, 0.06), transparent 70%);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        /* Hide all scrollbars globally */
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+
+        html::-webkit-scrollbar, body::-webkit-scrollbar, .slide::-webkit-scrollbar, *::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--fg);
+            font: 500 clamp(16px, 1.2vw, 19px)/1.55 'Be Vietnam Pro', system-ui, sans-serif;
+            transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+
+        /* Architectural Blueprint Grid Background with Ambient Spotlight */
+        .slide {
+            position: fixed;
+            inset: 0;
+            padding: clamp(18px, 3vh, 36px) clamp(24px, 5.5vw, 72px) clamp(56px, 8vh, 76px);
+            display: none !important;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            background-color: var(--bg);
+            background-image: 
+                var(--radial-glow),
+                linear-gradient(var(--ln) 1px, transparent 1px),
+                linear-gradient(90deg, var(--ln) 1px, transparent 1px);
+            background-size: 100% 100%, 7vw 7vw, 7vw 7vw;
+            background-position: center top, -1px -1px, -1px -1px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+            z-index: 1;
+            box-sizing: border-box;
+        }
+
+        /* Active Slide Display */
+        .slide.on {
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            z-index: 2;
+            animation: var(--t, t0) 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .slide.fx.on {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+            gap: clamp(24px, 4vw, 56px);
+            align-items: center;
+            align-content: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            max-width: 1560px;
+            margin: 0 auto;
+        }
+
+        .slide.fx.on[data-side="r"] {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+        }
+        .slide.fx.on[data-side="r"] .ph { grid-column: 1; }
+        .slide.fx.on[data-side="r"] .tx { grid-column: 2; }
+
+        /* Outgoing Slide Animation */
+        .slide.out {
+            display: flex !important;
+            opacity: 0;
+            visibility: visible;
+            z-index: 1;
+            animation: slideOutFade 0.4s cubic-bezier(0.65, 0, 0.35, 1) both;
+        }
+        .slide.fx.out {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+            gap: clamp(24px, 4vw, 56px);
+            align-items: center;
+            align-content: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            max-width: 1560px;
+            margin: 0 auto;
+        }
+        .slide.fx.out[data-side="r"] {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+        }
+        .slide.fx.out[data-side="r"] .ph { grid-column: 1; }
+        .slide.fx.out[data-side="r"] .tx { grid-column: 2; }
+        @keyframes slideOutFade {
+            to { opacity: 0; transform: scale(0.96) translateY(-8px); filter: blur(4px); }
+        }
+
+        /* Slide Corner Crosshairs */
+        .slide:before {
+            content: "";
+            position: absolute;
+            left: 2.5vw;
+            top: 3.5vh;
+            width: 2.5vw;
+            height: 2.5vw;
+            border-left: 3px solid var(--ac);
+            border-top: 3px solid var(--ac);
+            z-index: 3;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        /* Hazard Warning Stripe at Slide Bottom */
+        .hz {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 0.6vh;
+            width: 100%;
+            z-index: 3;
+            background: repeating-linear-gradient(-45deg, var(--ac) 0 14px, #070A10 14px 28px);
+        }
+
+        /* Typography */
+        h1, h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            line-height: 1.2;
+            font-weight: 800;
+            letter-spacing: -0.015em;
+        }
+        h1 { font-size: clamp(34px, 4.4vw, 64px); }
+        h2 { font-size: clamp(26px, 2.9vw, 42px); margin-bottom: 0.35em; }
+
+        .eb {
+            color: var(--ac);
+            letter-spacing: 0.16em;
+            font-size: clamp(13px, 0.95vw, 15px);
+            text-transform: uppercase;
+            margin-bottom: 0.45em;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+        .eb:before {
+            content: "●";
+            font-size: 0.85em;
+            animation: pulseDot 1.5s infinite alternate;
+        }
+        @keyframes pulseDot { from { opacity: 0.3; } to { opacity: 1; transform: scale(1.2); } }
+
+        /* Two-Column Side-by-Side Slide Layout */
+        .l {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.4vh;
+            width: 100%;
+        }
+
+        .l ol {
+            list-style: none;
+            counter-reset: n;
+            border-top: 2.5px solid var(--ac);
+            width: 100%;
+        }
+
+        .l li {
+            counter-increment: n;
+            padding: clamp(0.48em, 1.1vh, 0.72em) 0 clamp(0.48em, 1.1vh, 0.72em) 2.8em;
+            border-bottom: 1px solid var(--ln);
+            position: relative;
+            font-size: clamp(16px, 1.15vw, 20px);
+            line-height: 1.48;
+            transition: transform 0.25s ease, background 0.25s;
+        }
+        .l li b {
+            font-size: 1.05em;
+            font-weight: 700;
+            color: var(--fg);
+        }
+        .l li:hover {
+            transform: translateX(8px);
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.08), transparent);
+        }
+        .l li:before {
+            content: counter(n, decimal-leading-zero);
+            position: absolute;
+            left: 0;
+            top: clamp(0.48em, 1.1vh, 0.72em);
+            color: var(--ac);
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95em;
+        }
+
+        .sb {
+            display: block;
+            margin: 0.25em 0 0 0;
+            padding-left: 0.85em;
+            border-left: 2.5px solid var(--ac);
+            font-size: clamp(14px, 1.0vw, 17.5px);
+            line-height: 1.48;
+            color: var(--mu);
+            font-weight: 400;
+        }
+
+        /* Stat Numbers Grid */
+        .st {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2vh 1.5vw;
+            margin-top: 2.5vh;
+            max-width: 950px;
+        }
+        .st.n6 { grid-template-columns: repeat(3, 1fr); }
+
+        .st div {
+            border: 1px solid var(--ln);
+            border-left: 4px solid var(--ac);
+            padding: 1.1em 1.25em;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), transparent 80%);
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            transition: transform 0.3s ease, box-shadow 0.3s, border-color 0.3s;
+        }
+        .st div:hover {
+            transform: translateY(-4px);
+            border-color: var(--ac);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        }
+        .st b {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(30px, 3.8vw, 54px);
+            line-height: 1;
+            color: var(--ac);
+            display: flex;
+            align-items: baseline;
+            gap: 0.2em;
+            font-weight: 800;
+        }
+        .st b em {
+            font-style: normal;
+            font-size: 0.45em;
+            color: var(--go);
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 700;
+        }
+        .st small {
+            display: block;
+            margin-top: 0.45em;
+            font-size: 0.94em;
+            color: var(--fg);
+            line-height: 1.4;
+        }
+
+        /* Chapter Divider Slide */
+        .c {
+            justify-content: center;
+            padding-bottom: 6vh;
+            text-align: left;
+        }
+        .c .n {
+            font: 900 clamp(100px, 22vw, 300px)/0.8 'Playfair Display', serif;
+            color: var(--ac);
+            opacity: 0.9;
+            letter-spacing: -0.05em;
+            margin-bottom: 0.1em;
+            text-shadow: 0 0 30px var(--ac-glow);
+        }
+        .c:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 48%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--ac), var(--go), transparent);
+            width: 100%;
+            box-shadow: 0 0 16px var(--ac);
+        }
+
+        /* Cover Slide */
+        .cv {
+            background: #080C14 linear-gradient(135deg, #080C14 30%, #1e1b4b 95%) !important;
+            color: #F8FAFC !important;
+            --fg: #F8FAFC;
+            --ln: rgba(255, 255, 255, 0.08);
+        }
+        .cv h1 {
+            margin: 0.2em 0 0.3em 0;
+            text-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            color: #FFFFFF;
+        }
+        .cv p {
+            color: #CBD5E1;
+            max-width: 820px;
+            font-size: clamp(17px, 1.35vw, 22px);
+            line-height: 1.6;
+        }
+        .cv .me {
+            margin-top: 4vh;
+            display: flex;
+            gap: 3vw;
+            flex-wrap: wrap;
+            font-size: 0.9em;
+        }
+        .cv .me div {
+            border-left: 2px solid var(--ac);
+            padding-left: 0.8em;
+        }
+        .cv .me span {
+            display: block;
+            color: var(--go);
+            font-size: 0.8em;
+            letter-spacing: 0.15em;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+        }
+        .cv .me b {
+            font-size: 1.05em;
+        }
+        .cv:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 10vh;
+            height: 3px;
+            width: 100%;
+            background: linear-gradient(90deg, var(--ac), var(--go), var(--te));
+        }
+
+        /* Top Progress Bar */
+        #pg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3.5px;
+            background: linear-gradient(90deg, var(--ac), var(--go));
+            width: 0%;
+            transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 100;
+            box-shadow: 0 0 12px var(--ac);
+        }
+
+        /* Fixed Footer Status Bar */
+        .ft {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.1em 5vw;
+            font-size: 0.82em;
+            letter-spacing: 0.1em;
+            color: var(--mu);
+            z-index: 20;
+            pointer-events: none;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            background: linear-gradient(0deg, var(--bg) 75%, transparent);
+        }
+        .ft b { color: var(--ac); font-weight: 800; }
+        .ft #fn {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--fg);
+            font-weight: 700;
+            max-width: 45vw;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Collapsible Floating Dock with Glowing Arrow */
+        .bt-wrapper {
+            position: fixed;
+            right: 1.8vw;
+            bottom: 1.2em;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            gap: 0.4em;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .bt {
+            display: flex;
+            align-items: center;
+            gap: 0.35em;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: right center;
+        }
+        .bt-wrapper.collapsed .bt {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(20px) scale(0.92);
+            pointer-events: none;
+            width: 0;
+            margin: 0;
+            padding: 0;
+            gap: 0;
+            overflow: hidden;
+        }
+        /* Glowing Toggle Arrow Button */
+        .dock-toggle-btn {
+            background: linear-gradient(135deg, var(--ac), #3730A3);
+            color: #FFFFFF !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 16px var(--ac-glow), 0 4px 15px rgba(0, 0, 0, 0.4);
+            animation: pulseGlow 2.4s infinite ease-in-out;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 0;
+            flex-shrink: 0;
+        }
+        .dock-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 28px var(--ac-glow), 0 0 40px var(--ac-glow), 0 6px 20px rgba(0, 0, 0, 0.6);
+            background: linear-gradient(135deg, var(--ac-light), var(--ac));
+        }
+        .dock-toggle-btn i {
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 0.95rem;
+        }
+        .bt-wrapper.collapsed .dock-toggle-btn {
+            animation: pulseGlow 1.6s infinite ease-in-out;
+        }
+        .bt-wrapper.collapsed .dock-toggle-btn i {
+            transform: rotate(180deg);
+        }
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 14px var(--ac-glow), 0 0 20px rgba(99, 102, 241, 0.2);
+                border-color: rgba(255, 255, 255, 0.25);
+            }
+            50% {
+                box-shadow: 0 0 28px var(--ac-glow), 0 0 42px var(--ac-glow), 0 0 15px rgba(245, 158, 11, 0.4);
+                border-color: rgba(255, 255, 255, 0.8);
+            }
+        }
+        button {
+            font: inherit;
+            font-size: 0.88rem;
+            background: var(--card-bg);
+            color: var(--fg);
+            border: 1px solid var(--card-border);
+            padding: 0.55em 1em;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35em;
+            backdrop-filter: blur(12px);
+        }
+        button:hover, button:focus-visible {
+            background: var(--ac);
+            color: #FFFFFF;
+            border-color: var(--ac);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px var(--ac-glow);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Slide Grid Search Modal (G) */
+        #nv {
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 15, 25, 0.96);
+            z-index: 200;
+            padding: 6vh 6vw;
+            overflow-y: auto;
+            display: none;
+            backdrop-filter: blur(20px);
+            animation: fadeInModal 0.25s ease-out;
+        }
+        [data-theme="light"] #nv {
+            background: rgba(248, 250, 252, 0.96);
+        }
+        #nv.o { display: block; }
+        @keyframes fadeInModal { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+        #nv .tb {
+            display: flex;
+            gap: 0.6em;
+            flex-wrap: wrap;
+            margin-bottom: 2em;
+            align-items: center;
+        }
+        #nv input {
+            font: inherit;
+            font-size: 0.88em;
+            padding: 0.65em 1.1em;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            color: var(--fg);
+            border-radius: 10px;
+            min-width: 300px;
+            outline: none;
+        }
+        #nv input:focus {
+            border-color: var(--ac);
+            box-shadow: 0 0 0 3px var(--ac-glow);
+        }
+
+        #gr {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 14px;
+        }
+        #gr button {
+            text-align: left;
+            padding: 1em;
+            min-height: 105px;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            background: var(--card-bg);
+            color: var(--fg);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+        #gr button:hover {
+            border-color: var(--ac);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        #gr button.a {
+            border-color: var(--ac);
+            border-width: 2px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.18), var(--card-bg));
+        }
+        #gr b {
+            color: var(--ac);
+            display: block;
+            font-size: 0.9em;
+            margin-bottom: 0.3em;
+        }
+        #gr small {
+            color: var(--mu);
+            display: block;
+            font-size: 0.72em;
+            line-height: 1.35;
+        }
+
+        /* =========================================================================
+           CINEMATIC FULL-IMAGE CONTAINER (PERFECT FIT & ZOOM LIGHTBOX)
+           ========================================================================= */
+        .slide.fx .tx {
+            min-width: 0;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide.fx .tx .l {
+            margin-top: clamp(8px, 1.5vh, 18px) !important;
+        }
+
+        .slide.fx .ph {
+            position: relative;
+            width: 100%;
+            max-width: min(540px, 42vw);
+            max-height: calc(100vh - clamp(110px, 15vh, 160px));
+            border-radius: 14px;
+            border: 1px solid var(--ph-border);
+            box-shadow: var(--ph-shadow);
+            background: var(--ph-bg);
+            padding: 6px 6px 8px 6px;
+            justify-self: center;
+            transform: perspective(1400px) rotateY(var(--ry, 0deg)) rotateX(var(--rx, 0deg));
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s, border-color 0.4s;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+        .slide.fx .ph:hover {
+            border-color: var(--ac);
+            box-shadow: 0 30px 70px -10px rgba(0, 0, 0, 0.9), 0 0 45px var(--ac-glow);
+        }
+
+        .ph-browser-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 3px 8px 5px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(9.5px, 0.7vw, 11.5px);
+            color: #94A3B8;
+            flex-shrink: 0;
+        }
+        .ph-dots {
+            display: flex;
+            gap: 5px;
+        }
+        .ph-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .ph-img-wrap {
+            position: relative;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* 100% Full Containment of Screenshot Image */
+        .slide.fx .ph img {
+            width: 100%;
+            height: auto;
+            max-height: clamp(150px, calc(100vh - clamp(180px, 24vh, 250px)), 380px);
+            object-fit: contain;
+            display: block;
+            border-radius: 6px;
+            transition: transform 0.35s ease;
+        }
+        .slide.fx .ph:hover img {
+            transform: scale(1.015);
+        }
+
+        .ph-zoom-hint {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(15, 23, 42, 0.88);
+            color: #FFFFFF;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            font-family: 'JetBrains Mono', monospace;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+        .ph-img-wrap:hover .ph-zoom-hint {
+            opacity: 1;
+        }
+
+        /* Floating Badge Over Visual Card */
+        .bd {
+            position: absolute !important;
+            z-index: 5 !important;
+            right: 12px;
+            bottom: 14px;
+            width: clamp(48px, 4.2vw, 62px);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--ac), #3730A3);
+            display: grid;
+            place-items: center;
+            align-content: center;
+            box-shadow: 
+                0 0 0 2px var(--ph-bg),
+                0 0 0 4px var(--ac),
+                0 8px 20px rgba(0, 0, 0, 0.6);
+            transform: rotate(-6deg);
+            pointer-events: none;
+            color: #FFFFFF;
+            text-align: center;
+        }
+        .bd i { font-size: 1em; }
+        .bd b {
+            display: block;
+            font: 800 clamp(7px, 0.6vw, 10px)/1 'Be Vietnam Pro', sans-serif;
+            letter-spacing: 0.05em;
+            margin-top: 0.15em;
+            text-transform: uppercase;
+        }
+
+        /* Lightbox Fullscreen Modal */
+        #lightboxModal {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 7, 18, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            animation: fadeInModal 0.25s ease-out;
+        }
+        #lightboxModal.open {
+            display: flex;
+        }
+        #lightboxImg {
+            max-width: 94vw;
+            max-height: 88vh;
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+            object-fit: contain;
+        }
+        #lightboxClose {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            background: #1E293B;
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s;
+        }
+        #lightboxClose:hover {
+            background: #EF4444;
+            transform: rotate(90deg);
+        }
+
+        /* Contact Info Modal */
+        #contactModal {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 7, 18, 0.9);
+            backdrop-filter: blur(20px);
+            z-index: 350;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeInModal 0.25s ease-out;
+        }
+        #contactModal.open {
+            display: flex;
+        }
+        .contact-card {
+            background: var(--card-bg);
+            border: 1.5px solid var(--ac);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 40px var(--ac-glow);
+            border-radius: 24px;
+            padding: clamp(24px, 3.5vw, 36px);
+            max-width: 460px;
+            width: 100%;
+            position: relative;
+            color: var(--fg);
+            text-align: center;
+            backdrop-filter: blur(16px);
+        }
+        .contact-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--ac), #8B5CF6);
+            display: grid;
+            place-items: center;
+            margin: 0 auto 14px auto;
+            color: #FFFFFF;
+            font-size: 2rem;
+            box-shadow: 0 10px 25px var(--ac-glow);
+        }
+        .contact-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--fg);
+            margin-bottom: 2px;
+        }
+        .contact-role {
+            font-size: 0.82em;
+            color: var(--ac);
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 18px 0 22px 0;
+            text-align: left;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 11px 16px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), transparent 80%);
+            border: 1px solid var(--ln);
+            border-radius: 12px;
+            font-size: 0.95em;
+        }
+        .contact-item i {
+            color: var(--go);
+            font-size: 1.2em;
+            width: 22px;
+            text-align: center;
+        }
+        .contact-item b {
+            color: var(--fg);
+            font-weight: 700;
+        }
+        .contact-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .btn-zalo {
+            background: #0068FF;
+            color: #FFFFFF !important;
+            border: none;
+            border-radius: 10px;
+            padding: 11px 14px;
+            font-weight: 700;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 15px rgba(0, 104, 255, 0.35);
+        }
+        .btn-zalo:hover {
+            background: #0052CC;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 104, 255, 0.5);
+        }
+        .btn-call {
+            background: var(--ac);
+            color: #FFFFFF !important;
+            border: none;
+            border-radius: 10px;
+            padding: 11px 14px;
+            font-weight: 700;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 15px var(--ac-glow);
+        }
+        .btn-call:hover {
+            background: var(--ac-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--ac-glow);
+        }
+
+        /* Transition Animations */
+        [data-tr="0"] { --t: t0 }
+        [data-tr="1"] { --t: t1 }
+        [data-tr="2"] { --t: t2 }
+        [data-tr="3"] { --t: t3 }
+        [data-tr="4"] { --t: t4 }
+        [data-tr="5"] { --t: t5 }
+        [data-tr="6"] { --t: t6 }
+        [data-tr="7"] { --t: t7 }
+
+        @keyframes t0 { from { opacity: 0; transform: scale(1.03); } }
+        @keyframes t1 { from { clip-path: inset(0 100% 0 0); } }
+        @keyframes t2 { from { transform: translateY(100%); } }
+        @keyframes t3 { from { transform: translateX(100%); } }
+        @keyframes t4 { from { clip-path: circle(0% at 50% 50%); } to { clip-path: circle(100% at 50% 50%); } }
+        @keyframes t5 { from { clip-path: polygon(0 0, 0 0, -40% 100%, 0 100%); } to { clip-path: polygon(0 0, 140% 0, 100% 100%, 0 100%); } }
+        @keyframes t6 { from { opacity: 0; transform: perspective(1200px) rotateY(-12deg) scale(0.96); } }
+        @keyframes t7 { from { clip-path: inset(50% 0 50% 0); } }
+
+        /* Staggered Content In Animations */
+        .slide.on .rv {
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation-delay: calc(var(--i, 0) * 0.08s);
+        }
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Large Slide Watermark */
+        .slide > .wm {
+            position: absolute !important;
+            right: 2.5vw;
+            top: 2vh;
+            z-index: 0;
+            font: 900 clamp(70px, 12vw, 200px)/1 'Playfair Display', serif;
+            -webkit-text-stroke: 1.5px var(--ac);
+            color: transparent;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        /* Responsive */
+        @media(max-height: 750px) {
+            .slide {
+                padding: 12px clamp(16px, 4vw, 40px) 48px;
+            }
+            h2 {
+                font-size: clamp(17px, 2.6vh, 25px);
+            }
+            .l li {
+                padding: 0.22em 0 0.22em 2.2em;
+                font-size: 13px;
+            }
+            .sb {
+                font-size: 11.5px;
+            }
+            .slide.fx .ph {
+                max-height: calc(100vh - 100px);
+                max-width: min(480px, 40vw);
+            }
+            .slide.fx .ph img {
+                max-height: clamp(130px, 42vh, 240px);
+            }
+            .st b {
+                font-size: clamp(24px, 4.5vh, 38px);
+            }
+            .st div {
+                padding: 0.7em 0.9em;
+            }
+        }
+
+        @media(max-width: 900px) {
+            .slide.fx.on, .slide.fx.on[data-side="r"] { 
+                display: flex !important;
+                flex-direction: column;
+                justify-content: flex-start;
+                gap: 16px;
+                padding-top: 25px;
+                padding-bottom: 75px;
+            }
+            .slide.fx .ph { 
+                order: 1;
+                max-width: 100%; 
+                max-height: 38vh;
+            }
+            .slide.fx .tx { 
+                order: 2;
+                width: 100%;
+            }
+            .slide { 
+                padding: 18px 5vw 75px; 
+            }
+            .st { grid-template-columns: 1fr; }
+            .st.n6 { grid-template-columns: 1fr; }
+            .ft #fn { display: none; }
+        }
+    
+        /* Single Download Modal Hero Styling */
+        .download-hero-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.95));
+            border: 1.5px solid var(--ac);
+            border-radius: 20px;
+            padding: 20px 22px;
+            margin: 16px 0;
+            text-align: left;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        [data-theme="light"] .download-hero-card {
+            background: linear-gradient(145deg, #F8FAFC, #EFF6FF);
+            border: 1.5px solid var(--ac);
+        }
+        .pkg-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 18px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .pkg-features li {
+            font-size: 0.88em;
+            color: var(--fg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            line-height: 1.4;
+        }
+        .pkg-features li i {
+            color: #10B981;
+            font-size: 1.1em;
+            flex-shrink: 0;
+        }
+        .download-hero-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: #FFFFFF !important;
+            font-size: 1.02em;
+            font-weight: 800;
+            padding: 14px 20px;
+            border-radius: 14px;
+            text-decoration: none;
+            letter-spacing: 0.03em;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-sizing: border-box;
+        }
+        .download-hero-btn:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 14px 35px rgba(16, 185, 129, 0.65);
+        }
+        .download-hero-btn:active {
+            transform: translateY(-1px);
+        }
+
+    
+        .bt a.dock-btn-link {
+            font: inherit;
+            font-size: 0.88rem;
+            background: var(--card-bg);
+            color: var(--fg);
+            border: 1px solid var(--card-border);
+            padding: 0.55em 1em;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35em;
+            backdrop-filter: blur(12px);
+            text-decoration: none;
+        }
+        .bt a.dock-btn-link:hover {
+            background: var(--ac);
+            color: #FFFFFF;
+            border-color: var(--ac);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px var(--ac-glow);
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- Top Progress Bar -->
+    <div id="pg"></div>
+
+    <!-- Main Presentation Container -->
+    <main id="app"></main>
+
+    <!-- Bottom Status Bar -->
+    <div class="ft">
+        <span id="fc">QUIZLAN PRO v2.0.0</span>
+        <span id="fn"></span>
+        <span id="si">01 / 26</span>
+    </div>
+
+    <!-- Floating Collapsible Navigation Bar with Glowing Toggle Arrow -->
+    <div class="bt-wrapper" id="btWrapper">
+        <div class="bt" id="btContainer">
+            <button id="bh" aria-label="Về Slide Đầu (Home)" title="Về Slide Đầu (Home)">
+                <i class="fa-solid fa-house"></i>
+            </button>
+            <button id="b0" aria-label="Slide trước (←)" title="Slide trước (←)">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <button id="b1" aria-label="Slide sau (→)" title="Slide sau (→)">
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <button id="bg" aria-label="Danh sách slide (G)" title="Danh sách slide (G)">
+                <i class="fa-solid fa-grid-2"></i> <span>G &bull; Menu</span>
+            </button>
+            <button id="bf" aria-label="Toàn màn hình (F)" title="Toàn màn hình (F)">
+                <i class="fa-solid fa-expand"></i> <span>F</span>
+            </button>
+            <button id="bt" aria-label="Đổi giao diện Sáng/Tối (T)" title="Đổi giao diện (T)">
+                <i class="fa-solid fa-circle-half-stroke"></i> <span>T</span>
+            </button>
+                        <a href="simulator.html" target="_blank" id="bs" class="dock-btn-link" aria-label="Web Mô Phỏng 99%" title="Trải nghiệm Web Mô Phỏng Tương Tác 99%">
+                <i class="fa-solid fa-laptop-code text-cyan-400"></i> <span>Mô Phỏng Demo</span>
+            </a>
+            <button id="bc" aria-label="Tải về" title="Tải phần mềm QuizLAN Pro v2.0.0 & Tài liệu GDPT 2018">
+                <i class="fa-solid fa-cloud-arrow-down text-emerald-400"></i> <span>Tải về</span>
+            </button>
+        </div>
+        <button id="dockToggleBtn" class="dock-toggle-btn" aria-label="Mở/Đóng thanh điều khiển" title="Bấm để ẩn/hiện thanh công cụ">
+            <i class="fa-solid fa-angles-right"></i>
+        </button>
+    </div>
+
+    <!-- Searchable Slide Grid Modal (G) -->
+    <nav id="nv" aria-label="Danh sách toàn bộ slide">
+        <div class="tb">
+            <input id="q" placeholder="Tìm slide: LAN, GDPT 2018, đấu trường live, bóc tách word, giám thị, QR, phổ điểm..." aria-label="Tìm kiếm slide">
+            <button data-f="">TẤT CẢ (26)</button>
+            <button data-f="CHƯƠNG 1">CHƯƠNG 1 (LAN)</button>
+            <button data-f="CHƯƠNG 2">CHƯƠNG 2 (GDPT 2018)</button>
+            <button data-f="CHƯƠNG 3">CHƯƠNG 3 (GIÁM THỊ)</button>
+            <button data-f="CHƯƠNG 4">CHƯƠNG 4 (PHỔ ĐIỂM & ĐẤU TRƯỜNG)</button>
+            <button id="xc"><i class="fa-solid fa-xmark me-1"></i> ĐÓNG (Esc)</button>
+        </div>
+        <div id="gr"></div>
+    </nav>
+
+    <!-- Lightbox Modal for 100% Full Screenshot View -->
+    <div id="lightboxModal" onclick="closeLightbox()">
+        <button id="lightboxClose" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
+        <img id="lightboxImg" src="" alt="QuizLAN Screenshot Full">
+    </div>
+
+            <!-- Ultra-compact Download & Contact Modal -->
+    <div id="contactModal" onclick="if(event.target===this) closeContact()">
+        <div class="contact-card" style="max-width: 420px; padding: 28px 24px;">
+            <button id="lightboxClose" onclick="closeContact()" style="top: 14px; right: 14px;"><i class="fa-solid fa-xmark"></i></button>
+            <div class="contact-avatar" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(99, 102, 241, 0.2)); color:#10B981; width: 62px; height: 62px; font-size: 1.6rem; margin-bottom: 10px;">
+                <i class="fa-solid fa-cloud-arrow-down"></i>
+            </div>
+            
+            <h3 style="font-size: 1.5rem; margin-bottom: 4px;">QuizLAN Pro v2.0.0</h3>
+            <p style="color:var(--mu); font-size:0.85em; margin-bottom: 0;">Phần mềm thi trắc nghiệm mạng LAN &bull; GDPT 2018</p>
+
+            <!-- 1 Link tải duy nhất -->
+            <a href="#" target="_blank" class="download-hero-btn" id="singleDownloadLink" title="Bấm để tải về QuizLAN Pro v2.0.0">
+                <i class="fa-solid fa-cloud-arrow-down fa-bounce"></i>
+                <span>Tải về QuizLAN Pro v2.0.0</span>
+            </a>
+
+            <!-- Khối Liên hệ -->
+            <div class="contact-compact-box">
+                <div style="font-size:0.78em; font-weight:800; color:var(--ac); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
+                    <i class="fa-solid fa-address-card me-1"></i> Thông Tin Liên Hệ
+                </div>
+                <div style="font-size:0.92em; font-weight:700; color:var(--fg); margin-bottom:2px;">
+                    <i class="fa-solid fa-user-graduate text-amber-400 me-1"></i> Tác giả: Bùi Thị Yến Nhi
+                </div>
+                <div style="font-size:0.83em; color:var(--mu); margin-bottom:10px;">
+                    Trường THPT Tân Phước Khánh &bull; Hotline: <b>0918.922.203</b>
+                </div>
+
+                <div class="contact-actions" style="margin-top: 6px; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <a href="https://zalo.me/0918922203" target="_blank" class="btn-zalo" style="padding: 8px 10px; font-size: 0.82em;">
+                        <i class="fa-solid fa-comment-dots"></i> Nhắn Zalo
+                    </a>
+                    <a href="tel:0918922203" class="btn-call" style="padding: 8px 10px; font-size: 0.82em;">
+                        <i class="fa-solid fa-phone"></i> Gọi Điện
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* =========================================================================
+           QUIZLAN PRO v2.0.0 — MASTER SLIDE DATASET
+           Format: [chapter, section_code, title, type, content, image_or_visual, badge_text]
+           ========================================================================= */
+        const C1 = 'CHƯƠNG 1', C2 = 'CHƯƠNG 2', C3 = 'CHƯƠNG 3', C4 = 'CHƯƠNG 4';
+
+        const S = [
+            // Slide 01: Cover
+            ['', 'BÌA', 'QuizLAN Pro v2.0.0 — Hệ Thống Thi Mạng LAN & Đấu Trường Live', 'cv', [
+                'Giải pháp chuyển đổi số phòng máy trường học: Tổ chức kiểm tra trắc nghiệm & đánh giá năng lực học sinh 100% Offline Mạng Nội Bộ (Zero-Internet Architecture), chuẩn hóa toàn diện theo Quy chế thi THPT 2018 của Bộ GD&ĐT.'
+            ], 'images/01.png', 'v2.0.0'],
+
+            // Slide 02: Introduction & Mission
+            ['', 'TỔNG QUAN', 'Sứ Mệnh Chuyển Đổi Số Phòng Máy Trường Học', 'fx', [
+                'Tác giả & Đơn vị phát triển§Được xây dựng bởi cô Bùi Thị Yến Nhi — Trường THPT Tân Phước Khánh, tối ưu hóa thực tế cho các phòng máy trường THPT, THCS và Trung tâm GDNN-GDTX',
+                'Giải quyết triệt để 3 bài toán nan giải của thi trực tuyến§1. Rớt mạng Internet diện rộng khi hàng trăm học sinh đồng loạt nộp bài§2. Barem tính điểm Đúng/Sai 4 ý lũy tiến phức tạp của GDPT 2018§3. Hiện tượng chuyển tab, tra cứu Google/ChatGPT và gian lận trong giờ thi'
+            ], 'images/02.png', 'TỔNG QUAN'],
+
+            // Slide 03: Agenda
+            ['', 'NỘI DUNG', 'Bản Đồ 4 Trụ Cột Tính Năng Cốt Lõi', 'fx', [
+                'Chương 1: Kiến Trúc Mạng LAN & Cơ Chế Lưu Kép Hybrid-Sync§Vận hành 100% Offline không cần Internet &bull; Tốc độ phản hồi 0.05ms &bull; CSDL SQLite nhẹ và an toàn',
+                'Chương 2: Chuẩn Hóa Đề Thi GDPT 2018 & Trình Bóc Tách Word§4 dạng thức câu hỏi mới &bull; Barem điểm tự động &bull; Bóc tách công thức Toán KaTeX từ file .docx',
+                'Chương 3: Giám Thị Thời Gian Thực & Chống Gian Lận Đa Tầng§Theo dõi ma trận 50+ máy trạm &bull; Bắt tab rời tự động &bull; Tính năng 1-Click "Thu bài toàn phòng"',
+                'Chương 4: Báo Cáo Phổ Điểm, Máy Chiếu & Đấu Trường Live§Báo cáo phổ điểm đánh giá năng lực &bull; Máy chiếu 3 mã QR phòng thi &bull; Đấu trường Live đường đua kịch tính &bull; Xuất Excel VnEdu/SMAS'
+            ], 'images/03.png', 'AGENDA'],
+
+            // ================= CHAPTER 1 =================
+            ['1', '', 'Kiến Trúc Mạng Nội Bộ (Zero-Internet & Hybrid-Sync)', 'ch'],
+
+            [C1, '1.1', '100% Vận Hành Mạng Nội Bộ (Zero-Internet Architecture)', 'fx', [
+                'Độc lập hoàn toàn với Internet bên ngoài§Toàn bộ gói tin và đề thi truyền qua hệ thống dây cáp LAN phòng máy hoặc bộ phát WiFi cục bộ trong phòng học',
+                'Không lo đứt cáp quang biển hay nghẽn băng thông§Kỳ thi luôn diễn ra ổn định và an toàn tuyệt đối ngay cả khi mất kết nối mạng ngoài toàn trường',
+                'Máy chủ cục bộ cực nhẹ chạy trực tiếp trên máy giáo viên§Sử dụng cổng mạng TCP chuẩn 5555, tích hợp sẵn script tự động mở Tường lửa Firewall trong 30 giây'
+            ], 'images/04.png', 'SERVER'],
+
+            [C1, '1.2', 'Thông Số Kỹ Thuật Vận Hành Vượt Trội', 's', [
+                '0.50|ms|độ trễ phản hồi mạng LAN nội bộ',
+                '500+|máy|khả năng đáp ứng đồng thời cùng giây',
+                '100|%|dữ liệu lưu trữ nội bộ máy nhà trường',
+                '5555|TCP|cổng mạng kết nối chuẩn QuizLAN',
+                '0.5|s|thời gian chấm điểm toàn phòng thi',
+                '2|tầng|cơ chế sao lưu kép Hybrid-Sync'
+            ], 'images/05.png', 'SPECS'],
+
+            [C1, '1.3', 'Cơ Chế Lưu Kép Hybrid-Sync Chống Sập Nguồn & Mất Điện', 'fx', [
+                'Đồng bộ 2 chiều thời gian thực§Mỗi khi học sinh chọn 1 đáp án, dữ liệu được ghi ngay đồng thời vào LocalStorage máy trạm và CSDL máy chủ',
+                'Khôi phục 100% bài làm nháp khi gặp sự cố§Nếu học sinh đá lỡ dây nguồn, máy tắt đột ngột hoặc mất điện, chỉ cần mở lại trình duyệt và chọn đúng tên là bài làm được khôi phục nguyên vẹn',
+                'Giữ nguyên đồng hồ đếm ngược§Thời gian làm bài còn lại được bảo toàn chính xác, học sinh tiếp tục làm bài mà không mất giây nào'
+            ], 'images/06.png', 'SYNC'],
+
+            [C1, '1.4', 'Không Gian Làm Việc Đa Giáo Viên & Sao Lưu CSDL .ZIP', 'fx', [
+                'Quản lý CSDL SQLite độc lập cho từng giáo viên§Mỗi giáo viên hoặc môn học có một tệp .db riêng (quizlan.db, toan12.db, tin10.db) được bảo mật bằng mật khẩu riêng',
+                '1-Click Đóng gói Sao lưu & Phục hồi ra file .ZIP§Giáo viên tải về file nén chứa toàn bộ ngân hàng đề thi, danh sách học sinh và lịch sử nộp bài chỉ trong 1 thao tác',
+                'Dễ dàng di chuyển dữ liệu sang phòng máy khác mà không lo thất thoát hay xáo trộn dữ liệu'
+            ], 'images/07.png', 'BACKUP'],
+
+            // ================= CHAPTER 2 =================
+            ['2', '', 'Đề Thi Chuẩn GDPT 2018 & Barem Điểm Tự Động', 'ch'],
+
+            [C2, '2.1', 'Chuẩn Hóa Toàn Diện 4 Dạng Đề Mới Nhất', 'fx', [
+                'Phần I: Trắc nghiệm 4 lựa chọn (MCQ)§Mỗi câu đúng cộng 0.25 điểm theo barem chuẩn của Bộ GD&ĐT',
+                'Phần II: Đúng / Sai 4 ý phức hợp (Compound True/False)§Tính điểm barem lũy tiến tự động: Đúng 1 ý = 0.1đ &bull; Đúng 2 ý = 0.25đ &bull; Đúng 3 ý = 0.5đ &bull; Đúng 4 ý = 1.0đ',
+                'Phần III: Trả lời ngắn / Điền số (Short Answer)§Học sinh tự nhập kết quả tính toán số học hoặc từ khóa ngắn (Hỗ trợ nhiều đáp án tương đương: Router | Bộ định tuyến)',
+                'Phần IV: Tự luận / Câu hỏi mở (Essay)§Hỗ trợ giáo viên chấm bài tự luận trực tiếp trên giao diện quản trị'
+            ], 'images/08.png', 'GDPT 2018'],
+
+            [C2, '2.2', 'Trình Bóc Tách File Word (.docx) & Công Thức KaTeX Thông Minh', 'fx', [
+                'Tự động bóc tách cấu trúc câu hỏi từ file Word có sẵn§Chỉ cần kéo thả file đề thi .docx có sẵn của giáo viên, hệ thống tự nhận diện câu hỏi và đáp án',
+                'Hỗ trợ toàn diện công thức Toán & Khoa học§Tự động chuyển đổi các công thức MathType và Equation sang mã KaTeX sắc nét, hiển thị mượt mà trên mọi thiết bị',
+                'Trích xuất tự động toàn bộ hình ảnh đồ thị§Tự động nén tối ưu và đính kèm hình minh họa tương ứng vào từng câu hỏi'
+            ], 'images/09.png', 'PARSER'],
+
+            [C2, '2.3', 'Trộn Đề Ma Trận Đa Biến & Ngăn Ngừa Gian Lận', 'fx', [
+                'Hoán vị câu hỏi & hoán vị đáp án ngẫu nhiên§Mỗi học sinh trong phòng thi nhận một đề thi xáo trộn hoàn toàn ngẫu nhiên, chống nhìn bài hiệu quả',
+                'Cấp mã đề thi tự động§Đảm bảo học sinh ngồi cạnh nhau có thứ tự câu và đáp án A-B-C-D khác nhau',
+                'Phân hóa ma trận theo 4 mức độ nhận thức§Nhận biết, Thông hiểu, Vận dụng và Vận dụng cao chuẩn cấu trúc đề thi tốt nghiệp'
+            ], 'images/10.png', 'SHUFFLE'],
+
+            // ================= CHAPTER 3 =================
+            ['3', '', 'Giám Thị Thời Gian Thực & Chống Gian Lận Đa Tầng', 'ch'],
+
+            [C3, '3.1', 'Giao Diện Học Sinh Vào Thi 3 Bước Siêu Tốc', 'fx', [
+                'Bước 1: Quét mã QR hoặc truy cập địa chỉ IP máy chủ phòng thi§Không cần cài đặt bất kỳ ứng dụng hay tiện ích mở rộng nào',
+                'Bước 2: Nhập mã PIN phòng thi & Chọn đúng Lớp, Số báo danh từ danh sách có sẵn',
+                'Bước 3: Nhận đề thi mã hóa và bắt đầu đếm ngược thời gian làm bài chuẩn xác'
+            ], 'images/11.png', 'ENTRY'],
+
+            [C3, '3.2', 'Giao Diện Làm Bài Trực Quan 30 - 40 Câu Hỏi', 'fx', [
+                'Bảng điều hướng lưới câu hỏi thông minh§Màu xanh: đã làm &bull; Màu xám: chưa làm &bull; Cờ cam: đánh dấu câu phân vân xem lại',
+                'Đồng hồ đếm ngược thời gian thực§Cảnh báo trực quan khi còn 5 phút cuối và tự động khóa nộp bài khi hết giờ',
+                'Tối ưu hiển thị đa nền tảng§Hiển thị hoàn hảo trên Máy tính bàn phòng máy, Laptop, iPad, Máy tính bảng và Điện thoại'
+            ], 'images/12.png', 'EXAM'],
+
+            [C3, '3.3', 'Giám Thị Phòng Thi, Bắt Tab Rời & Thu Bài Tức Thì', 'fx', [
+                'Theo dõi tập trung 50+ máy trạm trên một màn hình§Biết chính xác từng máy đang làm đến câu số mấy, tiến độ bao nhiêu %',
+                'Nhật ký vi phạm chống gian lận đa tầng§Tự động phát hiện khi học sinh chuyển tab trình duyệt, mở Google tra cứu hoặc thu nhỏ màn hình thi',
+                'Tính năng "Thu bài toàn phòng trong 1 click"§Giám thị khóa bài thi ngay lập tức khi hết giờ hoặc thu bài riêng từng máy vi phạm quy chế'
+            ], 'images/13.png', 'PROCTOR'],
+
+            [C3, '3.4', 'Quản Lý Học Sinh & Import Danh Sách Lớp Nhanh Chóng', 'fx', [
+                'Nhập danh sách học sinh từ file Excel (.xlsx / .csv) chỉ trong 1 giây§Tự động phân loại theo lớp: 12A1, 12A2, 12A3, 11B1...',
+                'Cấp số báo danh tự động cho toàn khối§Học sinh chỉ cần chọn đúng tên trong danh sách, tránh nhập nhầm thông tin',
+                'Khóa tài khoản và ngăn chặn đăng nhập trùng lặp khi phát hiện thiết bị lạ'
+            ], 'images/14.png', 'STUDENTS'],
+
+            // ================= CHAPTER 4 =================
+            ['4', '', 'Báo Cáo Phổ Điểm, Máy Chiếu Phòng Thi & Đấu Trường Live', 'ch'],
+
+            [C4, '4.1', 'Báo Cáo Phân Tích Phổ Điểm & Đánh Giá Năng Lực Học Sinh', 'fx', [
+                'Trực quan hóa năng lực toàn diện của lớp học§Trung tâm thống kê cung cấp biểu đồ phổ điểm hình chuông trực quan, hỗ trợ giáo viên phân tích chính xác năng lực thực tế của từng lớp',
+                'Đo lường độ phân hóa và chất lượng đề thi§Tự động tính toán tỷ lệ Giỏi - Khá - Đạt - Chưa đạt, độ lệch chuẩn và độ phân biệt của đề kiểm tra theo chuẩn sư phạm',
+                'Phát hiện lỗ hổng kiến thức để kịp thời bồi dưỡng§Thống kê danh sách những câu hỏi có tỷ lệ làm sai cao nhất, giúp giáo viên điều chỉnh phương pháp và củng cố kiến thức trọng tâm'
+            ], 'images/15.png', 'PHỔ ĐIỂM'],
+
+            [C4, '4.2', 'Hệ Thống 3 Mã QR Thông Minh & Chế Độ Projector', 'fx', [
+                '1. Mã QR Phòng thi chung§Học sinh quét mã vào thẳng trang chủ chọn danh sách đề thi đang mở',
+                '2. Mã QR Từng đề thi trực tiếp§Tự động điền sẵn Mã truy cập (Access Code), học sinh không cần gõ mã đề',
+                '3. Chế Độ Máy Chiếu (Projector Mode)§Phóng to mã QR và địa chỉ IP toàn màn hình lên Máy chiếu / SmartTV cho cả phòng học quét từ xa'
+            ], 'images/16.png', 'QR 3-BƯỚC'],
+
+            [C4, '4.3', 'Đấu Trường Live & Bảng Xếp Hạng Đường Đua Thời Gian Thực', 'fx', [
+                'Phòng chờ Lobby & Quét mã QR tham gia thi đấu§Học sinh quét mã QR hoặc nhập PIN, hệ thống hiển thị danh sách người chơi và đếm số lượng người tham gia theo thời gian thực',
+                'Đường đua Live Race Track & Bảng xếp hạng bứt phá§Theo dõi thanh tiến độ làm bài trực tiếp của từng thí sinh từ 0% đến 100%, tự động nhảy thứ hạng kịch tính như game show truyền hình',
+                'Vinh danh Top 1 - Top 2 - Top 3 & Hiệu ứng pháo hoa rực rỡ§Tối ưu hiển thị tuyệt đẹp trên SmartTV / Màn hình máy chiếu lớp học, kích thích tối đa hứng thú học tập của học sinh'
+            ], 'images/22.png', 'ĐẤU TRƯỜNG'],
+
+            [C4, '4.4', 'Thống Kê & Phân Tích Độ Khó Từng Câu Hỏi', 'fx', [
+                'Báo cáo phổ điểm chi tiết từ 0 đến 10 điểm chuẩn hóa theo chuẩn sư phạm',
+                'Phân loại mức độ nhận thức câu hỏi: Nhận biết, Thông hiểu, Vận dụng và Vận dụng cao',
+                'Hỗ trợ tổ chuyên môn đánh giá ngân hàng câu hỏi đề thi và cải tiến qua các năm học'
+            ], 'images/17.png', 'MA TRẬN'],
+
+            [C4, '4.5', 'Giám Sát Nộp Bài Live 0.0s & Xem Lời Giải Chi Tiết', 'fx', [
+                'Cập nhật kết quả chấm điểm tức thì ngay khi học sinh bấm nộp bài',
+                'Hiển thị điểm tổng, điểm từng phần (Phần I MCQ, Phần II Đúng/Sai, Phần III Điền số) và thời gian hoàn thành',
+                'Tùy chọn cho phép học sinh xem lại bài làm và lời giải chi tiết sau khi kết thúc giờ làm bài'
+            ], 'images/18.png', 'KẾT QUẢ'],
+
+            [C4, '4.6', 'Xuất Báo Cáo File Excel Chuẩn Sư Phạm (VnEdu / SMAS)', 's', [
+                '1|Click|xuất bảng điểm tổng hợp toàn khối',
+                '100|%|tương thích chuẩn quản lý điểm VnEdu, SMAS',
+                '2|cột|tự động tách riêng Họ đệm và Tên học sinh',
+                '1|Nút|\"Xuất DS Vắng\" để xếp lịch kiểm tra bù'
+            ], 'images/19.png', 'EXCEL'],
+
+            // ================= SUMMARY & COMPARISON =================
+            ['', 'SO SÁNH', 'Bảng So Sánh Vượt Trội Của QuizLAN Pro', 'fx', [
+                'Hoạt động khi mất Internet§QuizLAN Pro: 100% Offline LAN &bull; Azota / Google Forms: Không thể hoạt động',
+                'Barem Đúng/Sai 4 ý GDPT 2018§QuizLAN Pro: Tự động 0.1 - 0.25 - 0.5 - 1.0đ &bull; Google Forms: Không hỗ trợ',
+                'Đấu trường Live & Giám thị thời gian thực§QuizLAN Pro: Đấu trường đường đua + Khóa tab + Thu bài toàn phòng &bull; Khác: Hạn chế',
+                'Bảo mật dữ liệu học sinh§QuizLAN Pro: Lưu trữ nội bộ máy trường &bull; Khác: Lưu trên máy chủ đám mây ngoài'
+            ], 'images/20.png', 'AN TOÀN'],
+
+            ['', 'TỔNG KẾT', 'Sẵn Sàng Chuyển Đổi Số Cùng QuizLAN Pro', 'cv', [
+                'Phần mềm trắc nghiệm mạng LAN số 1 dành cho trường học. Vận hành ổn định, giao diện hiện đại, chuẩn hóa toàn diện theo Quy chế thi THPT 2018.',
+                'Tác giả: Bùi Thị Yến Nhi — Trường THPT Tân Phước Khánh • Hotline & Zalo: 0918.922.203 • Bản quyền © 2026 QuizLAN Pro v2.0.0.'
+            ], 'images/21.png', 'DONE']
+        ];
+
+        /* =========================================================================
+           SLIDE ENGINE & CONTROLLER LOGIC
+           ========================================================================= */
+        const app = document.getElementById('app');
+        const pg = document.getElementById('pg');
+        const fc = document.getElementById('fc');
+        const fn = document.getElementById('fn');
+        const si = document.getElementById('si');
+        const nv = document.getElementById('nv');
+        const gr = document.getElementById('gr');
+        const qInput = document.getElementById('q');
+
+        let currentSlide = 0;
+        let isTransitioning = false;
+        let soundEnabled = true;
+
+        // Web Audio Synthesizer
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = AudioCtxClass ? new AudioCtxClass() : null;
+
+        function playSlideSfx() {
+            if (!soundEnabled || !audioCtx) return;
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.06);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            } catch (e) {}
+        }
+
+        function playSuccessSfx() {
+            if (!soundEnabled || !audioCtx) return;
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.08);
+                osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.18);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            } catch (e) {}
+        }
+
+        // Render All Slides HTML
+        function buildSlides() {
+            app.innerHTML = S.map((s, idx) => {
+                const [chap, sec, title, type, content, img, badge] = s;
+                const trStyle = `data-tr="${idx % 8}"`;
+                const wmNum = (idx + 1).toString().padStart(2, '0');
+
+                // 1. Cover Slide
+                if (type === 'cv') {
+                    return `
+                    <section class="slide cv" id="sl-${idx}" ${trStyle}>
+                        <div class="wm">${wmNum}</div>
+                        <div class="eb rv" style="--i:1;"><span>QUIZLAN PRO v2.0.0</span> &bull; <span>GIẢI PHÁP THI MẠNG LAN</span></div>
+                        <h1 class="rv" style="--i:2;">${title}</h1>
+                        <p class="rv" style="--i:3;">${content[0] || ''}</p>
+                        <div class="me rv" style="--i:4;">
+                            <div><span>PHIÊN BẢN</span><b>v2.0.0 PRO (LAN OFFLINE)</b></div>
+                            <div><span>CHUẨN ĐỀ</span><b>BỘ GD&amp;ĐT 2018</b></div>
+                            <div><span>PHẢN HỒI</span><b>0.05 MS &bull; TỨC THÌ</b></div>
+                        </div>
+                        <div class="hz"></div>
+                    </section>`;
+                }
+
+                // 2. Chapter Divider Slide
+                if (type === 'ch') {
+                    return `
+                    <section class="slide c" id="sl-${idx}" ${trStyle}>
+                        <div class="n rv" style="--i:1;">0${chap}</div>
+                        <div class="eb rv" style="--i:2;"><span>CHƯƠNG 0${chap}</span></div>
+                        <h2 class="rv" style="--i:3;">${title}</h2>
+                        <div class="hz"></div>
+                    </section>`;
+                }
+
+                // 3. Stats Numbers Slide
+                if (type === 's') {
+                    const statBoxes = content.map((item, i) => {
+                        const [val, unit, label] = item.split('|');
+                        return `
+                        <div class="rv" style="--i:${i+2};">
+                            <b>${val} <em>${unit}</em></b>
+                            <small>${label}</small>
+                        </div>`;
+                    }).join('');
+
+                    return `
+                    <section class="slide" id="sl-${idx}" ${trStyle}>
+                        <div class="wm">${wmNum}</div>
+                        <div class="eb rv" style="--i:1;"><span>${chap || 'QUIZLAN PRO'}</span> ${sec ? '&bull; <span>MỤC ' + sec + '</span>' : ''}</div>
+                        <h2 class="rv" style="--i:2;">${title}</h2>
+                        <div class="st ${content.length > 4 ? 'n6' : ''}">${statBoxes}</div>
+                        <div class="hz"></div>
+                    </section>`;
+                }
+
+                // 4. Cinematic 2-Column Side-by-Side with Real Screenshot (.slide.fx)
+                if (type === 'fx') {
+                    const listItems = content.map((item, i) => {
+                        const parts = item.split('§');
+                        return `
+                        <li class="rv" style="--i:${i+3};">
+                            <b>${parts[0]}</b>
+                            ${parts[1] ? `<span class="sb">${parts[1]}</span>` : ''}
+                        </li>`;
+                    }).join('');
+
+                    const isRight = idx % 2 === 1;
+
+                    let browserUrl = 'quizlan.local/admin &bull; 192.168.1.100:5555';
+                    if (img && (img.includes('10.png') || img.includes('11.png'))) {
+                        browserUrl = 'quizlan.local/quiz &bull; 192.168.100.173:5555/student';
+                    } else if (img && img.includes('12.png')) {
+                        browserUrl = 'quizlan.local/projector &bull; 192.168.100.173:5555/qr';
+                    } else if (img && img.includes('04.png')) {
+                        browserUrl = 'quizlan.local/admin &bull; Formatter GDPT 2018';
+                    } else if (img && img.includes('01.png')) {
+                        browserUrl = 'quizlan.local/login &bull; CSDL SQLite';
+                    } else if (img && img.includes('02.png')) {
+                        browserUrl = 'quizlan.local/admin &bull; Tổng Quan Dashboard';
+                    } else if (img && img.includes('13.png')) {
+                        browserUrl = 'quizlan.local/admin &bull; Cảnh Báo Chống Gian Lận';
+                    }
+
+                    let badgeIcon = 'fa-star';
+                    if (badge) {
+                        const bUpper = badge.toUpperCase();
+                        if (bUpper.includes('SERVER') || bUpper.includes('BACKUP') || bUpper.includes('LAN')) badgeIcon = 'fa-database';
+                        else if (bUpper.includes('SYNC')) badgeIcon = 'fa-rotate';
+                        else if (bUpper.includes('GDPT') || bUpper.includes('PARSER')) badgeIcon = 'fa-file-lines';
+                        else if (bUpper.includes('SHUFFLE')) badgeIcon = 'fa-shuffle';
+                        else if (bUpper.includes('ENTRY')) badgeIcon = 'fa-key';
+                        else if (bUpper.includes('EXAM')) badgeIcon = 'fa-pen-to-square';
+                        else if (bUpper.includes('PROCTOR')) badgeIcon = 'fa-shield-halved';
+                        else if (bUpper.includes('STUDENTS')) badgeIcon = 'fa-users';
+                        else if (bUpper.includes('PHỔ ĐIỂM') || bUpper.includes('MA TRẬN')) badgeIcon = 'fa-chart-column';
+                        else if (bUpper.includes('QR')) badgeIcon = 'fa-qrcode';
+                        else if (bUpper.includes('KẾT QUẢ') || bUpper.includes('SPECS')) badgeIcon = 'fa-trophy';
+                        else if (bUpper.includes('VS')) badgeIcon = 'fa-code-compare';
+                        else if (bUpper.includes('AGENDA')) badgeIcon = 'fa-list-check';
+                    }
+
+                    return `
+                    <section class="slide fx" id="sl-${idx}" ${trStyle} data-side="${isRight ? 'r' : 'l'}">
+                        <div class="tx">
+                            <div class="eb rv" style="--i:1;"><span>${chap || 'QUIZLAN PRO'}</span> ${sec ? '&bull; <span>MỤC ' + sec + '</span>' : ''}</div>
+                            <h2 class="rv" style="--i:2;">${title}</h2>
+                            <div class="l" style="margin-top:2vh;">
+                                <ol>${listItems}</ol>
+                            </div>
+                        </div>
+                        <div class="ph">
+                            <div class="ph-browser-bar">
+                                <div class="ph-dots">
+                                    <span class="ph-dot" style="background:#EF4444;"></span>
+                                    <span class="ph-dot" style="background:#F59E0B;"></span>
+                                    <span class="ph-dot" style="background:#10B981;"></span>
+                                </div>
+                                <span>${browserUrl}</span>
+                                <i class="fa-solid fa-expand text-slate-400"></i>
+                            </div>
+                            <div class="ph-img-wrap" onclick="openLightbox('${img || 'images/02.png'}')">
+                                <img src="${img || 'images/02.png'}" alt="${title}" loading="lazy">
+                                <div class="ph-zoom-hint"><i class="fa-solid fa-magnifying-glass-plus me-1"></i> Bấm để phóng to</div>
+                            </div>
+                            ${badge ? `<div class="bd"><i class="fa-solid ${badgeIcon}"></i><b>${badge}</b></div>` : ''}
+                        </div>
+                        <div class="hz"></div>
+                    </section>`;
+                }
+
+                // 5. Default List Layout
+                const itemsHtml = content.map((item, i) => {
+                    const parts = item.split('§');
+                    return `
+                    <li class="rv" style="--i:${i+3};">
+                        <b>${parts[0]}</b>
+                        ${parts[1] ? `<span class="sb">${parts[1]}</span>` : ''}
+                    </li>`;
+                }).join('');
+
+                return `
+                <section class="slide" id="sl-${idx}" ${trStyle}>
+                    <div class="wm">${wmNum}</div>
+                    <div class="eb rv" style="--i:1;"><span>${chap || 'QUIZLAN PRO'}</span> ${sec ? '&bull; <span>MỤC ' + sec + '</span>' : ''}</div>
+                    <h2 class="rv" style="--i:2;">${title}</h2>
+                    <div class="l" style="margin-top:2.5vh; max-width:850px;">
+                        <ol>${itemsHtml}</ol>
+                    </div>
+                    <div class="hz"></div>
+                </section>`;
+            }).join('');
+        }
+
+        // Lightbox Handler
+        function openLightbox(src) {
+            const modal = document.getElementById('lightboxModal');
+            const img = document.getElementById('lightboxImg');
+            if (modal && img) {
+                img.src = src;
+                modal.classList.add('open');
+                playSlideSfx();
+            }
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('lightboxModal');
+            if (modal) modal.classList.remove('open');
+        }
+
+        // Contact Modal Handlers
+        function openContact() {
+            const modal = document.getElementById('contactModal');
+            if (modal) {
+                modal.classList.add('open');
+                playSlideSfx();
+            }
+        }
+
+        function closeContact() {
+            const modal = document.getElementById('contactModal');
+            if (modal) modal.classList.remove('open');
+        }
+
+        // Build Slide Drawer Grid (G Modal)
+        function buildGrid(filterText = '') {
+            const query = filterText.toLowerCase().trim();
+            const filtered = S.map((s, i) => ({ s, i })).filter(({ s }) => {
+                if (!query) return true;
+                const str = `${s[0]} ${s[1]} ${s[2]} ${(s[4] || []).join(' ')}`.toLowerCase();
+                return str.includes(query);
+            });
+
+            gr.innerHTML = filtered.map(({ s, i }) => {
+                const [chap, sec, title, type] = s;
+                const isAct = i === currentSlide ? 'a' : '';
+                return `
+                <button onclick="goToSlide(${i})" class="${isAct}">
+                    <div>
+                        <b>${(i + 1).toString().padStart(2, '0')}. ${title || 'Chương Mới'}</b>
+                        <small>${chap || 'QuizLAN Pro'} ${sec ? '&bull; ' + sec : ''}</small>
+                    </div>
+                    <span style="font-size:0.7em; color:var(--ac); font-family:'JetBrains Mono',monospace; margin-top:8px;">
+                        [${type.toUpperCase()}]
+                    </span>
+                </button>`;
+            }).join('');
+        }
+
+        // Navigation Controller
+        function goToSlide(targetIndex) {
+            if (targetIndex < 0 || targetIndex >= S.length || isTransitioning) return;
+            isTransitioning = true;
+
+            const allSlides = document.querySelectorAll('.slide');
+            const prevIndex = currentSlide;
+            const prevEl = allSlides[prevIndex];
+            const targetEl = allSlides[targetIndex];
+
+            // Mark previous slide as outgoing
+            if (prevEl && prevIndex !== targetIndex) {
+                prevEl.classList.remove('on');
+                prevEl.classList.add('out');
+            }
+
+            // Mark target slide as active
+            targetEl.classList.remove('out');
+            targetEl.classList.add('on');
+            targetEl.scrollTop = 0;
+            currentSlide = targetIndex;
+
+            // Update footer status bar
+            const slideData = S[currentSlide];
+            if (fc) fc.textContent = slideData[0] ? `${slideData[0]} ${slideData[1] ? '• ' + slideData[1] : ''}` : 'QUIZLAN PRO v2.0.0';
+            if (fn) fn.textContent = slideData[2] || '';
+            if (si) si.textContent = `${(currentSlide + 1).toString().padStart(2, '0')} / ${S.length.toString().padStart(2, '0')}`;
+
+            // Update Progress Bar
+            if (pg) pg.style.width = `${((currentSlide + 1) / S.length) * 100}%`;
+
+            // Clean up outgoing slide after animation finishes
+            setTimeout(() => {
+                if (prevEl && prevIndex !== currentSlide) {
+                    prevEl.classList.remove('out');
+                }
+                isTransitioning = false;
+            }, 400);
+
+            // Close Grid Modal if open
+            closeGrid();
+            playSlideSfx();
+
+            // Fire confetti on final slide
+            if (currentSlide === S.length - 1) {
+                playSuccessSfx();
+                confetti({ particleCount: 140, spread: 90, origin: { y: 0.6 } });
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < S.length - 1) goToSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) goToSlide(currentSlide - 1);
+        }
+
+        function toggleGrid() {
+            nv.classList.toggle('o');
+            if (nv.classList.contains('o')) {
+                buildGrid(qInput.value);
+                qInput.focus();
+            }
+        }
+
+        function closeGrid() {
+            nv.classList.remove('o');
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const nextTheme = isDark ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', nextTheme);
+            try { localStorage.setItem('quizlan_theme', nextTheme); } catch(e) {}
+            playSlideSfx();
+        }
+
+        // Restore saved theme if available
+        try {
+            const savedTheme = localStorage.getItem('quizlan_theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+        } catch(e) {}
+
+        // Toggle Floating Dock (Collapsible Glowing Arrow)
+        const dockWrapper = document.getElementById('btWrapper');
+        const dockToggleBtn = document.getElementById('dockToggleBtn');
+        function toggleDock() {
+            if (dockWrapper) {
+                dockWrapper.classList.toggle('collapsed');
+                playSlideSfx();
+            }
+        }
+        if (dockToggleBtn) dockToggleBtn.addEventListener('click', toggleDock);
+
+        // Attach Button Listeners
+        const homeBtn = document.getElementById('bh');
+        if (homeBtn) homeBtn.addEventListener('click', () => goToSlide(0));
+        const contactBtn = document.getElementById('bc');
+        if (contactBtn) contactBtn.addEventListener('click', openContact);
+        document.getElementById('b0').addEventListener('click', prevSlide);
+        document.getElementById('b1').addEventListener('click', nextSlide);
+        document.getElementById('bg').addEventListener('click', toggleGrid);
+        document.getElementById('bf').addEventListener('click', toggleFullscreen);
+        document.getElementById('bt').addEventListener('click', toggleTheme);
+        document.getElementById('xc').addEventListener('click', closeGrid);
+
+        // Search in Grid Drawer
+        qInput.addEventListener('input', (e) => {
+            buildGrid(e.target.value);
+        });
+
+        document.querySelectorAll('#nv .tb button[data-f]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const f = btn.getAttribute('data-f');
+                qInput.value = f;
+                buildGrid(f);
+            });
+        });
+
+        // Keyboard Controls
+        window.addEventListener('keydown', (e) => {
+            if (document.getElementById('lightboxModal') && document.getElementById('lightboxModal').classList.contains('open')) {
+                if (e.key === 'Escape') closeLightbox();
+                return;
+            }
+
+            if (document.getElementById('contactModal') && document.getElementById('contactModal').classList.contains('open')) {
+                if (e.key === 'Escape') closeContact();
+                return;
+            }
+
+            if (e.target.tagName === 'INPUT') {
+                if (e.key === 'Escape') closeGrid();
+                return;
+            }
+
+            if (e.key === 'Home') {
+                e.preventDefault();
+                goToSlide(0);
+            } else if (e.key.toLowerCase() === 'c') {
+                e.preventDefault();
+                const cm = document.getElementById('contactModal');
+                if (cm && cm.classList.contains('open')) closeContact();
+                else openContact();
+            } else if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.key.toLowerCase() === 'g') {
+                e.preventDefault();
+                toggleGrid();
+            } else if (e.key.toLowerCase() === 'f') {
+                e.preventDefault();
+                toggleFullscreen();
+            } else if (e.key.toLowerCase() === 't') {
+                e.preventDefault();
+                toggleTheme();
+            } else if (e.key === 'Escape') {
+                closeGrid();
+            }
+        });
+
+        // 3D Parallax Tilt Effect on Mouse Move
+        window.addEventListener('mousemove', (e) => {
+            const activeCard = document.querySelector('.slide.on.fx .ph');
+            if (activeCard) {
+                const x = e.clientX / window.innerWidth - 0.5;
+                const y = e.clientY / window.innerHeight - 0.5;
+                activeCard.style.setProperty('--ry', `${x * 12}deg`);
+                activeCard.style.setProperty('--rx', `${-y * 12}deg`);
+            }
+        });
+
+        // Initialize App
+        buildSlides();
+        goToSlide(0);
+    </script>
+</body>
+</html>

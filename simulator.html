@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="vi" data-bs-theme="dark" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizLAN Pro v2.0.0 — Web Simulator (Bản Mô Phỏng Tương Tác 99%)</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/01.png">
+
+    <!-- Bootstrap 5.3 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- FontAwesome 6 Pro / Free CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
+    <!-- KaTeX for Math Formulas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+    <!-- Chart.js & Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root, [data-theme="dark"], [data-bs-theme="dark"] {
+            --bg-main: #0B0F19;
+            --bg-surface: #111827;
+            --bg-surface-secondary: #1F2937;
+            --border-subtle: #374151;
+            --border-focus: #6366F1;
+            --text-main: #F9FAFB;
+            --text-muted: #9CA3AF;
+            --ac: #6366F1;
+            --ac-light: #818CF8;
+            --ac-glow: rgba(99, 102, 241, 0.35);
+            --emerald-glow: rgba(16, 185, 129, 0.35);
+            --sidebar-width: 260px;
+            --sidebar-bg: #0F172A;
+            --sidebar-border: #1E293B;
+            --sidebar-text: #94A3B8;
+            --sidebar-active-bg: rgba(99, 102, 241, 0.15);
+            --sidebar-active-text: #818CF8;
+        }
+
+        [data-theme="light"], [data-bs-theme="light"] {
+            --bg-main: #F8FAFC;
+            --bg-surface: #FFFFFF;
+            --bg-surface-secondary: #F1F5F9;
+            --border-subtle: #E2E8F0;
+            --border-focus: #4F46E5;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --ac: #4F46E5;
+            --ac-light: #6366F1;
+            --ac-glow: rgba(79, 70, 229, 0.25);
+            --emerald-glow: rgba(16, 185, 129, 0.25);
+            --sidebar-width: 260px;
+            --sidebar-bg: #FFFFFF;
+            --sidebar-border: #E2E8F0;
+            --sidebar-text: #475569;
+            --sidebar-active-bg: #EEF2FF;
+            --sidebar-active-text: #4F46E5;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 0.25s, color 0.25s;
+        }
+
+        /* Top Simulator Bar */
+        .sim-top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: rgba(15, 23, 42, 0.94);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.35);
+            z-index: 1050;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.25rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        [data-theme="light"] .sim-top-bar {
+            background: rgba(255, 255, 255, 0.94);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .sim-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+        .sim-badge {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .sim-nav-pills {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        [data-theme="light"] .sim-nav-pills {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .sim-pill-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .sim-pill-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .sim-pill-btn.active {
+            background: var(--ac);
+            color: #FFFFFF !important;
+            box-shadow: 0 4px 14px var(--ac-glow);
+        }
+
+        .sim-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sim-action-btn {
+            background: var(--bg-surface-secondary);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        .sim-action-btn:hover {
+            border-color: var(--ac);
+            color: var(--ac-light);
+            transform: translateY(-1px);
+        }
+
+        /* View Container System */
+        .sim-view {
+            display: none;
+            margin-top: 56px;
+            min-height: calc(100vh - 56px);
+            animation: fadeInView 0.3s ease-out forwards;
+        }
+        .sim-view.active {
+            display: block;
+        }
+        @keyframes fadeInView {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Admin Layout */
+        .admin-layout {
+            display: flex;
+            min-height: calc(100vh - 56px);
+        }
+        .admin-sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: fixed;
+            top: 56px;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+        }
+        .admin-brand-box {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--sidebar-border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .admin-brand-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            display: grid;
+            place-items: center;
+            color: white;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px var(--ac-glow);
+        }
+        .admin-menu {
+            list-style: none;
+            padding: 0.75rem 0.6rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .admin-nav-item {
+            margin-bottom: 3px;
+        }
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.65rem 1rem;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.15s ease;
+            cursor: pointer;
+        }
+        .admin-nav-link i {
+            font-size: 1.05rem;
+            width: 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        .admin-nav-link:hover {
+            color: var(--text-main);
+            background: var(--sidebar-active-bg);
+        }
+        .admin-nav-link.active {
+            color: var(--sidebar-active-text);
+            background: var(--sidebar-active-bg);
+            border-left: 3px solid var(--ac);
+        }
+        .admin-nav-link.active i {
+            color: var(--ac);
+        }
+
+        .admin-main {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 1.75rem 2.25rem;
+            background: var(--bg-main);
+        }
+
+        .stat-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--ac);
+        }
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 1.35rem;
+        }
+
+        .custom-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            margin-bottom: 1.5rem;
+        }
+        .custom-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        /* Student Portal */
+        .student-portal-bg {
+            min-height: calc(100vh - 56px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 50% 20%, #1E1B4B 0%, #0F172A 60%, #030712 100%);
+            padding: 2rem;
+        }
+        [data-theme="light"] .student-portal-bg {
+            background: radial-gradient(circle at 50% 20%, #EEF2FF 0%, #E2E8F0 60%, #CBD5E1 100%);
+        }
+        .portal-card {
+            background: var(--bg-surface);
+            border: 1.5px solid rgba(99, 102, 241, 0.4);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 460px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px var(--ac-glow);
+            text-align: center;
+        }
+
+        /* Student Exam Room */
+        .exam-header {
+            position: sticky;
+            top: 56px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.85rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 90;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .exam-timer-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.05));
+            border: 1.5px solid #EF4444;
+            padding: 6px 16px;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #EF4444;
+            animation: pulseTimer 2s infinite;
+        }
+        @keyframes pulseTimer {
+            0%, 100% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.5); }
+        }
+
+        .exam-body {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 1.75rem;
+            padding: 1.75rem 2.25rem;
+            max-width: 1550px;
+            margin: 0 auto;
+        }
+        @media (max-width: 1024px) {
+            .exam-body { grid-template-columns: 1fr; }
+        }
+
+        .q-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .q-card:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+        .q-badge {
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.05em;
+        }
+        .mcq-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 16px;
+            border-radius: 12px;
+            background: var(--bg-surface-secondary);
+            border: 1px solid var(--border-subtle);
+            margin-top: 10px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mcq-option:hover {
+            border-color: var(--ac);
+            background: rgba(99, 102, 241, 0.1);
+        }
+        .mcq-option.selected {
+            border-color: #10B981;
+            background: rgba(16, 185, 129, 0.15);
+            font-weight: 700;
+        }
+        .mcq-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid var(--border-subtle);
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        .mcq-option.selected .mcq-circle {
+            background: #10B981;
+            color: white;
+            border-color: #10B981;
+        }
+
+        /* Question Pallet */
+        .pallet-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+        .pallet-btn {
+            height: 42px;
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface-secondary);
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 0.88rem;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .pallet-btn:hover {
+            border-color: var(--ac);
+            transform: scale(1.05);
+        }
+        .pallet-btn.done {
+            background: #10B981;
+            color: white;
+            border-color: #10B981;
+        }
+        .pallet-btn.active {
+            border: 2px solid var(--ac);
+            box-shadow: 0 0 12px var(--ac-glow);
+        }
+
+        /* Arena Battle */
+        .arena-bg {
+            min-height: calc(100vh - 56px);
+            background: radial-gradient(circle at 50% 15%, #172036 0%, #0C1222 55%, #050811 100%);
+            padding: 1.75rem 2rem;
+            color: #FFFFFF;
+        }
+        .arena-header-card {
+            background: rgba(17, 26, 46, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid #23324D;
+            border-radius: 20px;
+            padding: 1.25rem 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.75rem;
+        }
+        .arena-track-card {
+            background: rgba(17, 26, 46, 0.9);
+            border: 1px solid #23324D;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.75rem;
+        }
+        .racetrack-lane {
+            background: #0C1322;
+            border: 1px solid #1E293B;
+            border-radius: 14px;
+            padding: 10px 16px;
+            margin-bottom: 10px;
+            position: relative;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+        .racetrack-runner {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .runner-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 0 15px currentColor;
+        }
+        .finish-line {
+            position: absolute;
+            right: 20px;
+            top: 0;
+            bottom: 0;
+            width: 8px;
+            background: repeating-linear-gradient(0deg, #FFFFFF, #FFFFFF 10px, #000000 10px, #000000 20px);
+            opacity: 0.8;
+        }
+
+        .podium-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-top: 1rem;
+        }
+        .podium-card {
+            background: #111A2E;
+            border-radius: 16px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            border: 1.5px solid #23324D;
+            transition: transform 0.3s;
+        }
+        .podium-card.rank-1 {
+            border-color: #F59E0B;
+            background: linear-gradient(180deg, rgba(245, 158, 11, 0.15), #111A2E);
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.35);
+            transform: scale(1.04);
+        }
+        .podium-card.rank-2 {
+            border-color: #94A3B8;
+            box-shadow: 0 0 20px rgba(148, 163, 184, 0.25);
+        }
+        .podium-card.rank-3 {
+            border-color: #D97706;
+            box-shadow: 0 0 20px rgba(217, 119, 6, 0.25);
+        }
+
+        /* Proctor Table */
+        .proctor-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+        .proctor-table tr {
+            background: var(--bg-surface);
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+        .proctor-table tr:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+        .proctor-table td, .proctor-table th {
+            padding: 14px 18px;
+            vertical-align: middle;
+            border: none;
+        }
+        .proctor-table th {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+        }
+        .proctor-table td:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+        .proctor-table td:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+
+        /* Modal Overrides */
+        .modal-content {
+            background-color: var(--bg-surface) !important;
+            color: var(--text-main) !important;
+            border: 1px solid var(--border-subtle) !important;
+            border-radius: 20px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+        }
+        .modal-header, .modal-footer {
+            border-color: var(--border-subtle) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- TOP SIMULATOR CONTROL BAR -->
+    <header class="sim-top-bar">
+        <div class="sim-brand">
+            <i class="fa-solid fa-server text-indigo-400"></i>
+            <span>QUIZLAN PRO v2.0.0</span>
+            <span class="sim-badge">Web Simulator</span>
+        </div>
+
+        <nav class="sim-nav-pills" aria-label="Bộ điều hướng mô phỏng">
+            <button class="sim-pill-btn active" onclick="switchView('view-admin')" id="pill-admin">
+                <i class="fa-solid fa-gauge-high text-indigo-400"></i> <span>Dashboard Admin</span>
+            </button>
+            <button class="sim-pill-btn" onclick="switchView('view-proctor')" id="pill-proctor">
+                <i class="fa-solid fa-shield-halved text-amber-400"></i> <span>Giám Thị Live</span>
+            </button>
+            <button class="sim-pill-btn" onclick="switchView('view-portal')" id="pill-portal">
+                <i class="fa-solid fa-right-to-bracket text-emerald-400"></i> <span>Cổng Học Sinh</span>
+            </button>
+            <button class="sim-pill-btn" onclick="switchView('view-exam')" id="pill-exam">
+                <i class="fa-solid fa-pen-nib text-cyan-400"></i> <span>Phòng Thi GDPT 2018</span>
+            </button>
+            <button class="sim-pill-btn" onclick="switchView('view-arena')" id="pill-arena">
+                <i class="fa-solid fa-trophy text-yellow-400"></i> <span>Đấu Trường Live</span>
+            </button>
+        </nav>
+
+        <div class="sim-actions">
+            <button class="sim-action-btn" onclick="toggleTheme()" title="Đổi giao diện Sáng / Tối">
+                <i class="fa-solid fa-circle-half-stroke"></i> <span id="themeText">Giao diện</span>
+            </button>
+            <a href="presentation.html" class="sim-action-btn" title="Quay lại slide thuyết trình">
+                <i class="fa-solid fa-chalkboard-user text-indigo-400"></i> <span>Slide Giới Thiệu</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- =========================================================================
+         VIEW 1: ADMIN MASTER DASHBOARD
+         ========================================================================= -->
+    <section id="view-admin" class="sim-view active">
+        <div class="admin-layout">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <div>
+                    <div class="admin-brand-box">
+                        <div class="admin-brand-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div>
+                            <div style="font-weight:800; font-size:1.05rem; line-height:1.2;">QuizLAN Pro</div>
+                            <small style="color:var(--text-muted); font-size:0.75rem;">THPT Tân Phước Khánh</small>
+                        </div>
+                    </div>
+                    <ul class="admin-menu">
+                        <li class="admin-nav-item">
+                            <a class="admin-nav-link active" onclick="setAdminTab('tab-overview', this)">
+                                <i class="fa-solid fa-chart-pie"></i> <span>Tổng Quan &amp; Phổ Điểm</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a class="admin-nav-link" onclick="setAdminTab('tab-quizzes', this)">
+                                <i class="fa-solid fa-file-signature"></i> <span>Quản Lý Ca Thi (12)</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a class="admin-nav-link" onclick="switchView('view-proctor')">
+                                <i class="fa-solid fa-shield-halved"></i> <span>Giám Thị Trực Tiếp</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a class="admin-nav-link" onclick="switchView('view-arena')">
+                                <i class="fa-solid fa-bolt text-warning"></i> <span>Đấu Trường Live</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a class="admin-nav-link" onclick="openWordParserModal()">
+                                <i class="fa-solid fa-file-word text-primary"></i> <span>Bóc Tách File Word</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a class="admin-nav-link" onclick="setAdminTab('tab-classes', this)">
+                                <i class="fa-solid fa-users"></i> <span>Danh Sách Lớp &amp; SBD</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a class="admin-nav-link" onclick="setAdminTab('tab-settings', this)">
+                                <i class="fa-solid fa-sliders"></i> <span>Cài Đặt Mạng LAN &amp; Port</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="padding:1rem; border-top:1px solid var(--sidebar-border); font-size:0.8rem;">
+                    <div style="display:flex; align-items:center; gap:8px; color:var(--text-muted);">
+                        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                        <span>Bản Quyền Vĩnh Viễn (v2.0.0)</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="admin-main">
+                <!-- Overview Tab -->
+                <div id="tab-overview">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div>
+                            <h2 style="font-weight:800; margin-bottom:2px;">Bảng Quản Trị Trung Tâm</h2>
+                            <p style="color:var(--text-muted); font-size:0.88rem; margin:0;">Hệ thống giám sát máy chủ phòng thi mạng LAN &amp; phân tích năng lực học sinh</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary" onclick="openWordParserModal()">
+                                <i class="fa-solid fa-file-word me-1"></i> Bóc Tách Đề Word
+                            </button>
+                            <button class="btn btn-primary" onclick="openCreateQuizModal()">
+                                <i class="fa-solid fa-plus me-1"></i> Tạo Ca Thi Mới
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 4 Stat Cards -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div>
+                                    <small style="color:var(--text-muted); font-weight:700; text-transform:uppercase; font-size:0.75rem;">Tổng Ca Thi</small>
+                                    <h3 style="font-weight:900; margin:4px 0 0 0;">12</h3>
+                                </div>
+                                <div class="stat-icon" style="background:rgba(99, 102, 241, 0.15); color:#818CF8;"><i class="fa-solid fa-layer-group"></i></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div>
+                                    <small style="color:var(--text-muted); font-weight:700; text-transform:uppercase; font-size:0.75rem;">Thí Sinh Tham Gia</small>
+                                    <h3 style="font-weight:900; margin:4px 0 0 0;">450</h3>
+                                </div>
+                                <div class="stat-icon" style="background:rgba(16, 185, 129, 0.15); color:#10B981;"><i class="fa-solid fa-users"></i></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div>
+                                    <small style="color:var(--text-muted); font-weight:700; text-transform:uppercase; font-size:0.75rem;">Điểm Trung Bình</small>
+                                    <h3 style="font-weight:900; margin:4px 0 0 0;">7.85</h3>
+                                </div>
+                                <div class="stat-icon" style="background:rgba(245, 158, 11, 0.15); color:#F59E0B;"><i class="fa-solid fa-star"></i></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div>
+                                    <small style="color:var(--text-muted); font-weight:700; text-transform:uppercase; font-size:0.75rem;">IP Máy Chủ LAN</small>
+                                    <h3 style="font-weight:900; margin:4px 0 0 0; font-family:'JetBrains Mono'; font-size:1.3rem;">192.168.1.100</h3>
+                                </div>
+                                <div class="stat-icon" style="background:rgba(14, 165, 233, 0.15); color:#0EA5E9;"><i class="fa-solid fa-network-wired"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Grid -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-lg-8">
+                            <div class="custom-card h-100">
+                                <div class="custom-card-header">
+                                    <div class="fw-bold"><i class="fa-solid fa-chart-column text-indigo-400 me-2"></i> Phổ Điểm Chuẩn Hóa GDPT 2018 (Toàn Trường)</div>
+                                    <span class="badge bg-primary-subtle text-primary">Phân phối hình chuông</span>
+                                </div>
+                                <div style="height: 280px;">
+                                    <canvas id="scoreChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="custom-card h-100">
+                                <div class="custom-card-header">
+                                    <div class="fw-bold"><i class="fa-solid fa-chart-pie text-emerald-400 me-2"></i> Tỷ Lệ Đạt Theo Dạng Thức</div>
+                                </div>
+                                <div style="height: 280px; display:flex; align-items:center; justify-content:center;">
+                                    <canvas id="typeChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quizzes Active Table -->
+                    <div class="custom-card">
+                        <div class="custom-card-header">
+                            <div class="fw-bold"><i class="fa-solid fa-clock-rotate-left text-amber-400 me-2"></i> Danh Sách Ca Thi Đang Vận Hành</div>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="toast('Đã làm mới dữ liệu ca thi!')"><i class="fa-solid fa-arrows-rotate"></i> Làm mới</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Tên Ca Thi</th>
+                                        <th>Khối / Môn</th>
+                                        <th>Thời Gian</th>
+                                        <th>Số Thí Sinh</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Hành Động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><b>Kiểm Tra Định Kỳ Vật Lí 12 — GDPT 2018</b></td>
+                                        <td>Khối 12 &bull; Vật Lí</td>
+                                        <td>45 Phút (28 Câu)</td>
+                                        <td><span class="badge bg-success">42 / 42 Thí sinh</span></td>
+                                        <td><span class="badge bg-primary">Đang Diễn Ra</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary me-1" onclick="switchView('view-proctor')"><i class="fa-solid fa-eye"></i> Giám Thị</button>
+                                            <button class="btn btn-sm btn-warning" onclick="switchView('view-arena')"><i class="fa-solid fa-bolt"></i> Đấu Trường</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Đề Ôn Tập Trắc Nghiệm Toán Học 11</b></td>
+                                        <td>Khối 11 &bull; Toán</td>
+                                        <td>30 Phút (20 Câu)</td>
+                                        <td><span class="badge bg-secondary">38 Thí sinh</span></td>
+                                        <td><span class="badge bg-success">Đã Hoàn Thành</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="toast('Đã xuất file bảng điểm Excel thành công!')"><i class="fa-solid fa-file-excel"></i> Xuất Excel</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Admin Tabs Placeholder -->
+                <div id="tab-quizzes" style="display:none;">
+                    <div class="custom-card">
+                        <h3>Quản Lý Chi Tiết 12 Ca Thi</h3>
+                        <p class="text-muted">Quản trị viên có thể tạo, chỉnh sửa cấu hình thời gian, đảo câu hỏi và bóc tách đề Word.</p>
+                        <button class="btn btn-primary" onclick="openCreateQuizModal()"><i class="fa-solid fa-plus"></i> Tạo Ca Thi</button>
+                    </div>
+                </div>
+
+                <div id="tab-classes" style="display:none;">
+                    <div class="custom-card">
+                        <h3>Quản Lý Lớp Học &amp; Danh Sách Học Sinh</h3>
+                        <p class="text-muted">Hỗ trợ nạp nhanh file Excel danh sách học sinh theo từng khối lớp (10, 11, 12).</p>
+                        <button class="btn btn-success" onclick="toast('Đã nạp thành công 45 học sinh từ file Excel!')"><i class="fa-solid fa-file-excel"></i> Nạp File Excel (.xlsx)</button>
+                    </div>
+                </div>
+
+                <div id="tab-settings" style="display:none;">
+                    <div class="custom-card">
+                        <h3>Cấu Hình Mạng LAN &amp; Tường Lửa Firewall</h3>
+                        <p class="text-muted">Cấu hình mở port 5555, tự động dò IP mạng nội bộ và đặt mật khẩu giám thị.</p>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="lanSwitch" checked>
+                            <label class="form-check-label" for="lanSwitch">Chế độ 100% Offline Mạng LAN (Không cần Internet)</label>
+                        </div>
+                        <button class="btn btn-primary" onclick="toast('Đã lưu cài đặt mạng LAN!')">Lưu Cấu Hình</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 2: STUDENT LOGIN PORTAL (INDEX.HTML REPLICA)
+         ========================================================================= -->
+    <section id="view-portal" class="sim-view">
+        <div class="student-portal-bg">
+            <div class="portal-card">
+                <div class="mb-3">
+                    <div class="stat-icon mx-auto mb-3" style="width:64px; height:64px; background:linear-gradient(135deg, #10B981, #6366F1); color:white; font-size:1.8rem; border-radius:18px;">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <h3 style="font-weight:800; margin-bottom:2px;">CỔNG THI HỌC SINH</h3>
+                    <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Nhập thông tin hoặc quét mã QR tại phòng máy</p>
+                </div>
+
+                <form onsubmit="event.preventDefault(); startExamFromPortal();" class="text-start">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">MÃ PHÒNG THI (PIN)</label>
+                        <input type="text" class="form-control form-control-lg text-center fw-bold text-primary font-monospace" id="portalPin" value="5555" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">SỐ BÁO DANH (SBD)</label>
+                        <input type="text" class="form-control" id="portalSbd" value="12015" placeholder="Ví dụ: 12015" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">HỌ VÀ TÊN THÍ SINH</label>
+                        <input type="text" class="form-control" id="portalName" value="Nguyễn Hoàng Nam" placeholder="Nhập đầy đủ họ và tên" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted">LỚP HỌC</label>
+                        <select class="form-select" id="portalClass">
+                            <option value="12A1" selected>Lớp 12A1 — THPT Tân Phước Khánh</option>
+                            <option value="12A2">Lớp 12A2 — THPT Tân Phước Khánh</option>
+                            <option value="11A3">Lớp 11A3 — THPT Tân Phước Khánh</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-3 shadow-lg" style="border-radius:14px; background:linear-gradient(135deg, #6366F1, #4F46E5);">
+                        <i class="fa-solid fa-arrow-right-to-bracket me-2"></i> VÀO PHÒNG THI NGAY
+                    </button>
+                </form>
+
+                <div class="mt-4 pt-3 border-top border-secondary-subtle d-flex justify-content-between align-items-center">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="toast('Quét mã QR từ camera máy tính thành công!')"><i class="fa-solid fa-qrcode me-1"></i> Quét Mã QR</button>
+                    <small class="text-muted"><i class="fa-solid fa-wifi text-emerald-400 me-1"></i> LAN: 192.168.1.100</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 3: STUDENT EXAM ROOM (QUIZ.HTML REPLICA)
+         ========================================================================= -->
+    <section id="view-exam" class="sim-view">
+        <!-- Exam Sticky Header -->
+        <header class="exam-header">
+            <div class="d-flex align-items-center gap-3">
+                <div class="stat-icon" style="width:40px; height:40px; background:rgba(99, 102, 241, 0.15); color:var(--ac); border-radius:10px; font-size:1.1rem;">
+                    <i class="fa-solid fa-atom"></i>
+                </div>
+                <div>
+                    <h5 style="font-weight:800; margin:0;">KIỂM TRA ĐỊNH KỲ VẬT LÍ 12 — GDPT 2018</h5>
+                    <small style="color:var(--text-muted); font-size:0.8rem;">Thí sinh: <b id="examStudentName" class="text-info">Nguyễn Hoàng Nam</b> &bull; SBD: <b id="examStudentSbd" class="text-warning">12015</b> (Lớp 12A1)</small>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <!-- Anti-Cheat Simulator Button -->
+                <button class="btn btn-sm btn-outline-danger" onclick="triggerCheatWarning()" title="Bấm để mô phỏng cảnh báo khi học sinh chuyển tab">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Thử Rời Tab
+                </button>
+
+                <!-- Timer -->
+                <div class="exam-timer-box">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                    <span id="examTimer">44:32</span>
+                </div>
+
+                <!-- Submit Button -->
+                <button class="btn btn-success fw-bold px-3 py-2" onclick="openSubmitConfirmModal()" style="border-radius:10px;">
+                    <i class="fa-solid fa-paper-plane me-1"></i> NỘP BÀI THI
+                </button>
+            </div>
+        </header>
+
+        <!-- Exam Layout Body -->
+        <div class="exam-body">
+            <!-- Left Column: Questions -->
+            <div>
+                <!-- Part 1: MCQ -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mb-3" style="background:rgba(99, 102, 241, 0.1); border-left:4px solid var(--ac);">
+                        <div>
+                            <span class="badge bg-primary q-badge">PHẦN I</span>
+                            <b class="ms-2">CÂU HỎI TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN (18 Câu)</b>
+                        </div>
+                        <small class="text-muted">Mỗi câu chọn 01 đáp án đúng nhất (0.25đ / câu)</small>
+                    </div>
+
+                    <!-- Question 1 -->
+                    <div class="q-card" id="q1">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="fw-bold text-primary">Câu 1:</span>
+                            <span class="badge bg-secondary-subtle text-secondary">0.25 điểm</span>
+                        </div>
+                        <p class="mb-3">Một vật dao động điều hòa theo phương trình $x = A \cos(\omega t + \varphi)$. Đại lượng $\omega$ được gọi là gì?</p>
+                        
+                        <div class="mcq-option" onclick="selectMcq(1, 'A', this)">
+                            <div class="mcq-circle">A</div>
+                            <div>Tần số góc của dao động</div>
+                        </div>
+                        <div class="mcq-option" onclick="selectMcq(1, 'B', this)">
+                            <div class="mcq-circle">B</div>
+                            <div>Pha ban đầu của dao động</div>
+                        </div>
+                        <div class="mcq-option" onclick="selectMcq(1, 'C', this)">
+                            <div class="mcq-circle">C</div>
+                            <div>Biên độ của dao động</div>
+                        </div>
+                        <div class="mcq-option" onclick="selectMcq(1, 'D', this)">
+                            <div class="mcq-circle">D</div>
+                            <div>Chu kì của dao động</div>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 (Math KaTeX) -->
+                    <div class="q-card" id="q2">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="fw-bold text-primary">Câu 2:</span>
+                            <span class="badge bg-secondary-subtle text-secondary">0.25 điểm</span>
+                        </div>
+                        <p class="mb-3">Công thức tính bước sóng $\lambda$ theo vận tốc truyền sóng $v$ và tần số $f$ là:</p>
+                        
+                        <div class="mcq-option" onclick="selectMcq(2, 'A', this)">
+                            <div class="mcq-circle">A</div>
+                            <div>$\lambda = \frac{v}{f}$</div>
+                        </div>
+                        <div class="mcq-option" onclick="selectMcq(2, 'B', this)">
+                            <div class="mcq-circle">B</div>
+                            <div>$\lambda = v \cdot f$</div>
+                        </div>
+                        <div class="mcq-option" onclick="selectMcq(2, 'C', this)">
+                            <div class="mcq-circle">C</div>
+                            <div>$\lambda = \frac{f}{v}$</div>
+                        </div>
+                        <div class="mcq-option" onclick="selectMcq(2, 'D', this)">
+                            <div class="mcq-circle">D</div>
+                            <div>$\lambda = 2\pi \frac{v}{f}$</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 2: True / False 4 items -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mb-3" style="background:rgba(16, 185, 129, 0.1); border-left:4px solid #10B981;">
+                        <div>
+                            <span class="badge bg-success q-badge">PHẦN II</span>
+                            <b class="ms-2">CÂU TRẮC NGHIỆM ĐÚNG / SAI 4 Ý (4 Câu)</b>
+                        </div>
+                        <small class="text-muted">Đúng 1 ý: 0.1đ • 2 ý: 0.25đ • 3 ý: 0.5đ • 4 ý: 1.0đ</small>
+                    </div>
+
+                    <!-- Question 19 (TF 4 statements) -->
+                    <div class="q-card" id="q19">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="fw-bold text-success">Câu 19:</span>
+                            <span class="badge bg-secondary-subtle text-secondary">1.0 điểm</span>
+                        </div>
+                        <p class="mb-3">Xét một khối khí lí tưởng thực hiện chu trình biến đổi trạng thái đẳng áp từ trạng thái 1 sang trạng thái 2. Đánh giá tính đúng/sai của các mệnh đề sau:</p>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle">
+                                <thead>
+                                    <tr class="table-secondary">
+                                        <th>Mệnh đề phát biểu</th>
+                                        <th style="width:100px; text-align:center;">ĐÚNG</th>
+                                        <th style="width:100px; text-align:center;">SAI</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>a) Áp suất chất khí không đổi trong toàn bộ quá trình ($p = \text{const}$).</td>
+                                        <td class="text-center"><input type="radio" name="tf_19_a" class="form-check-input" onchange="markPalletDone(19)"></td>
+                                        <td class="text-center"><input type="radio" name="tf_19_a" class="form-check-input" onchange="markPalletDone(19)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>b) Thể tích chất khí tỉ lệ nghịch với nhiệt độ tuyệt đối ($V \sim 1/T$).</td>
+                                        <td class="text-center"><input type="radio" name="tf_19_b" class="form-check-input" onchange="markPalletDone(19)"></td>
+                                        <td class="text-center"><input type="radio" name="tf_19_b" class="form-check-input" onchange="markPalletDone(19)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>c) Hệ thức liên hệ là $\frac{V_1}{T_1} = \frac{V_2}{T_2}$.</td>
+                                        <td class="text-center"><input type="radio" name="tf_19_c" class="form-check-input" onchange="markPalletDone(19)"></td>
+                                        <td class="text-center"><input type="radio" name="tf_19_c" class="form-check-input" onchange="markPalletDone(19)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>d) Đường đẳng áp trong hệ tọa độ $(p, V)$ là đường thẳng song song với trục $V$.</td>
+                                        <td class="text-center"><input type="radio" name="tf_19_d" class="form-check-input" onchange="markPalletDone(19)"></td>
+                                        <td class="text-center"><input type="radio" name="tf_19_d" class="form-check-input" onchange="markPalletDone(19)"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 3: Number Fill-in -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mb-3" style="background:rgba(245, 158, 11, 0.1); border-left:4px solid #F59E0B;">
+                        <div>
+                            <span class="badge bg-warning text-dark q-badge">PHẦN III</span>
+                            <b class="ms-2">CÂU TRẮC NGHIỆM TRẢ LỜI NGẮN / ĐIỀN SỐ (6 Câu)</b>
+                        </div>
+                        <small class="text-muted">Nhập kết quả số (0.25đ / câu)</small>
+                    </div>
+
+                    <!-- Question 23 -->
+                    <div class="q-card" id="q23">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="fw-bold text-warning">Câu 23:</span>
+                            <span class="badge bg-secondary-subtle text-secondary">0.25 điểm</span>
+                        </div>
+                        <p class="mb-3">Một sóng âm truyền trong không khí với tốc độ $v = 340\text{ m/s}$ có tần số $f = 680\text{ Hz}$. Tính bước sóng $\lambda$ theo đơn vị mét (m)?</p>
+                        
+                        <div class="d-flex align-items-center gap-3" style="max-width:300px;">
+                            <span class="fw-bold">Đáp số:</span>
+                            <input type="text" class="form-control form-control-lg font-monospace text-center fw-bold" placeholder="Nhập số..." oninput="if(this.value) markPalletDone(23);">
+                            <span class="text-muted">m</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Question Pallet Navigator -->
+            <div>
+                <div class="custom-card sticky-top" style="top: 130px;">
+                    <div class="custom-card-header">
+                        <div class="fw-bold"><i class="fa-solid fa-table-cells text-indigo-400 me-2"></i> Bảng Câu Hỏi (28)</div>
+                        <span id="answeredCount" class="badge bg-success">Đã làm: 2 / 28</span>
+                    </div>
+
+                    <div class="pallet-grid mb-3">
+                        <button class="pallet-btn done" onclick="scrollToQ('q1')">1</button>
+                        <button class="pallet-btn done" onclick="scrollToQ('q2')">2</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q3')">3</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q4')">4</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q5')">5</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q6')">6</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q7')">7</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q8')">8</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q9')">9</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q10')">10</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q11')">11</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q12')">12</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q13')">13</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q14')">14</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q15')">15</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q16')">16</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q17')">17</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q18')">18</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q19')">19</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q20')">20</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q21')">21</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q22')">22</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q23')">23</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q24')">24</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q25')">25</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q26')">26</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q27')">27</button>
+                        <button class="pallet-btn" onclick="scrollToQ('q28')">28</button>
+                    </div>
+
+                    <div class="d-flex justify-content-between text-muted small border-top pt-3">
+                        <span><i class="fa-solid fa-square text-success me-1"></i> Đã trả lời</span>
+                        <span><i class="fa-regular fa-square me-1"></i> Chưa làm</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 4: LIVE BATTLE ARENA (ARENA_LIVE.HTML REPLICA)
+         ========================================================================= -->
+    <section id="view-arena" class="sim-view">
+        <div class="arena-bg">
+            <!-- Arena Top Header -->
+            <div class="arena-header-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="stat-icon" style="width:48px; height:48px; background:linear-gradient(135deg, #F59E0B, #EF4444); color:white; font-size:1.4rem; border-radius:14px; box-shadow:0 0 20px rgba(245, 158, 11, 0.5);">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:900; margin:0; letter-spacing:0.02em;">ĐẤU TRƯỜNG LIVE &bull; BẢNG XẾP HẠNG ĐƯỜNG ĐUA</h4>
+                        <small style="color:#94A3B8;">Ca thi: <b>Vật Lí 12 - Tốc Độ &amp; Chính Xác</b> &bull; Phòng máy số 01</small>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-warning fw-bold px-3 py-2" onclick="simulateArenaStep()" style="box-shadow:0 0 20px rgba(245, 158, 11, 0.4);">
+                        <i class="fa-solid fa-forward-step me-1"></i> Mô Phỏng Trả Lời Realtime
+                    </button>
+                    <button class="btn btn-outline-light" onclick="triggerFireworks()">
+                        <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Pháo Hoa
+                    </button>
+                </div>
+            </div>
+
+            <!-- Racetrack Container -->
+            <div class="arena-track-card">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <b style="font-size:1.1rem;"><i class="fa-solid fa-flag-checkered text-warning me-2"></i> Đường Đua Về Đích Thời Gian Thực (Top Thí Sinh)</b>
+                    <span class="badge bg-danger animate-pulse"><i class="fa-solid fa-circle me-1"></i> LIVE 42 THÍ SINH</span>
+                </div>
+
+                <!-- Runner 1 -->
+                <div class="racetrack-lane">
+                    <div class="racetrack-runner" id="runner1" style="left: 78%;">
+                        <div class="runner-avatar" style="background:#F59E0B; color:#000;"><i class="fa-solid fa-crown"></i></div>
+                        <div>
+                            <div class="fw-bold text-warning" style="font-size:0.9rem;">Nguyễn Hoàng Nam (12A1)</div>
+                            <small style="color:#94A3B8; font-size:0.75rem;">24/28 câu &bull; 9.450 pts (Streak x6 🔥)</small>
+                        </div>
+                    </div>
+                    <div class="finish-line"></div>
+                </div>
+
+                <!-- Runner 2 -->
+                <div class="racetrack-lane">
+                    <div class="racetrack-runner" id="runner2" style="left: 65%;">
+                        <div class="runner-avatar" style="background:#94A3B8; color:#000;">🥈</div>
+                        <div>
+                            <div class="fw-bold" style="font-size:0.9rem;">Trần Thị Bình (12A1)</div>
+                            <small style="color:#94A3B8; font-size:0.75rem;">21/28 câu &bull; 8.820 pts</small>
+                        </div>
+                    </div>
+                    <div class="finish-line"></div>
+                </div>
+
+                <!-- Runner 3 -->
+                <div class="racetrack-lane">
+                    <div class="racetrack-runner" id="runner3" style="left: 52%;">
+                        <div class="runner-avatar" style="background:#D97706; color:#000;">🥉</div>
+                        <div>
+                            <div class="fw-bold text-amber-400" style="font-size:0.9rem;">Lê Hoàng Cường (12A2)</div>
+                            <small style="color:#94A3B8; font-size:0.75rem;">18/28 câu &bull; 7.650 pts</small>
+                        </div>
+                    </div>
+                    <div class="finish-line"></div>
+                </div>
+            </div>
+
+            <!-- Podium Leaderboard -->
+            <div class="podium-grid">
+                <!-- Rank 2 -->
+                <div class="podium-card rank-2">
+                    <div style="font-size:2rem; margin-bottom:6px;">🥈</div>
+                    <h5 class="fw-bold mb-1">Trần Thị Bình</h5>
+                    <div class="text-secondary small mb-2">Lớp 12A1 &bull; SBD: 12003</div>
+                    <h4 class="fw-extrabold text-light mb-0 font-monospace">8.820 PTS</h4>
+                </div>
+
+                <!-- Rank 1 (Champion) -->
+                <div class="podium-card rank-1">
+                    <div style="font-size:2.5rem; margin-bottom:4px;"><i class="fa-solid fa-crown text-warning"></i></div>
+                    <h4 class="fw-extrabold text-warning mb-1">Nguyễn Hoàng Nam</h4>
+                    <div class="text-warning-emphasis small mb-2">Lớp 12A1 &bull; SBD: 12015</div>
+                    <h3 class="fw-extrabold text-warning mb-0 font-monospace">9.450 PTS</h3>
+                    <span class="badge bg-warning text-dark mt-2">🔥 Streak x6</span>
+                </div>
+
+                <!-- Rank 3 -->
+                <div class="podium-card rank-3">
+                    <div style="font-size:2rem; margin-bottom:6px;">🥉</div>
+                    <h5 class="fw-bold mb-1 text-amber-400">Lê Hoàng Cường</h5>
+                    <div class="text-secondary small mb-2">Lớp 12A2 &bull; SBD: 12042</div>
+                    <h4 class="fw-extrabold text-amber-400 mb-0 font-monospace">7.650 PTS</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 5: LIVE PROCTORING (GIÁM THỊ THỜI GIAN THỰC)
+         ========================================================================= -->
+    <section id="view-proctor" class="sim-view">
+        <div style="padding: 1.75rem 2.25rem; max-width: 1550px; margin: 0 auto;">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div>
+                    <h3 style="font-weight:800; margin-bottom:2px;"><i class="fa-solid fa-shield-halved text-amber-400 me-2"></i> Bảng Giám Thị Phòng Máy Trực Tiếp</h3>
+                    <p class="text-muted small mb-0">Theo dõi tiến độ, cảnh báo rời màn hình và hỗ trợ thí sinh tức thì</p>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-danger" onclick="toast('Đã phát tín hiệu cảnh báo toàn phòng thi!')">
+                        <i class="fa-solid fa-bell me-1"></i> Rung Chuông Cảnh Báo
+                    </button>
+                    <button class="btn btn-primary" onclick="toast('Đã làm mới danh sách giám thị!')">
+                        <i class="fa-solid fa-arrows-rotate me-1"></i> Làm Mới
+                    </button>
+                </div>
+            </div>
+
+            <!-- Proctor Student Table -->
+            <div class="custom-card">
+                <div class="table-responsive">
+                    <table class="proctor-table">
+                        <thead>
+                            <tr>
+                                <th>SBD / Họ Tên</th>
+                                <th>Lớp</th>
+                                <th>IP Máy Trạm</th>
+                                <th>Tiến Độ Làm Bài</th>
+                                <th>Cảnh Báo Tab</th>
+                                <th>Trạng Thái</th>
+                                <th>Xử Lý Thí Sinh</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <b>12015 &bull; Nguyễn Hoàng Nam</b>
+                                </td>
+                                <td>12A1</td>
+                                <td><span class="font-monospace text-muted">192.168.1.15</span></td>
+                                <td style="width:220px;">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height:8px;">
+                                            <div class="progress-bar bg-success" style="width:85%;"></div>
+                                        </div>
+                                        <small class="fw-bold">24/28</small>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-success">0 Lần</span></td>
+                                <td><span class="badge bg-primary">Đang làm bài</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="toast('Đã gửi thông điệp riêng tới máy 12015')"><i class="fa-solid fa-message"></i> Nhắn tin</button>
+                                </td>
+                            </tr>
+                            <tr style="background: rgba(239, 68, 68, 0.08); border-left: 3px solid #EF4444;">
+                                <td>
+                                    <b class="text-danger">12042 &bull; Lê Hoàng Cường</b>
+                                </td>
+                                <td>12A2</td>
+                                <td><span class="font-monospace text-muted">192.168.1.42</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height:8px;">
+                                            <div class="progress-bar bg-warning" style="width:65%;"></div>
+                                        </div>
+                                        <small class="fw-bold">18/28</small>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-danger">🔴 2 Lần (Cảnh báo)</span></td>
+                                <td><span class="badge bg-warning text-dark">Bị Cảnh Cáo</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-success me-1" onclick="toast('Đã mở khóa thí sinh 12042')"><i class="fa-solid fa-lock-open"></i> Mở khóa</button>
+                                    <button class="btn btn-sm btn-danger" onclick="toast('Đã thu bài thi cưỡng bức 12042!')"><i class="fa-solid fa-ban"></i> Thu bài</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>12003 &bull; Trần Thị Bình</b>
+                                </td>
+                                <td>12A1</td>
+                                <td><span class="font-monospace text-muted">192.168.1.03</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height:8px;">
+                                            <div class="progress-bar bg-success" style="width:75%;"></div>
+                                        </div>
+                                        <small class="fw-bold">21/28</small>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-success">0 Lần</span></td>
+                                <td><span class="badge bg-primary">Đang làm bài</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="toast('Đã cộng +5 phút bù giờ cho 12003')"><i class="fa-solid fa-plus"></i> +5 Phút</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================================
+         MODALS (WORD PARSER, SUBMIT CONFIRM, CHEAT WARNING)
+         ========================================================================= -->
+    <!-- Word Parser Modal -->
+    <div class="modal fade" id="wordParserModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-file-word text-primary me-2"></i> Bóc Tách Đề Thi Word (.docx) Chuẩn GDPT 2018</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small">Hệ thống AI Parser tự động nhận diện 4 dạng thức câu hỏi, công thức KaTeX và bảng hình ảnh.</p>
+                    <div class="border border-dashed p-4 text-center rounded-3 mb-3" style="background:var(--bg-surface-secondary); cursor:pointer;" onclick="simulateWordUpload()">
+                        <i class="fa-solid fa-cloud-arrow-up text-primary" style="font-size:2.5rem;"></i>
+                        <h6 class="mt-2 mb-1 fw-bold">Nhấp vào đây để chọn File Word mẫu (.docx)</h6>
+                        <small class="text-muted">Hoặc kéo thả file đề thi vào khu vực này</small>
+                    </div>
+                    <div id="wordParsedResult" style="display:none;" class="p-3 bg-success-subtle rounded-3 border border-success">
+                        <div class="fw-bold text-success"><i class="fa-solid fa-circle-check me-1"></i> Bóc Tách Thành Công 28 Câu Hỏi!</div>
+                        <ul class="small mb-0 mt-2 text-dark">
+                            <li>Phần I: 18 Câu MCQ (Đã nhận diện đủ đáp án A, B, C, D)</li>
+                            <li>Phần II: 4 Câu Đúng / Sai (Đã bóc tách đủ 16 ý a, b, c, d)</li>
+                            <li>Phần III: 6 Câu Điền số &amp; Công thức KaTeX</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" onclick="toast('Đã lưu đề thi bóc tách vào ngân hàng đề!'); bootstrap.Modal.getInstance(document.getElementById('wordParserModal')).hide();">Lưu Đề Thi Vào Hệ Thống</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Anti-Cheat Warning Modal -->
+    <div class="modal fade" id="cheatWarningModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-danger">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-triangle-exclamation me-2"></i> CẢNH BÁO VI PHẠM PHÒNG THI</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="stat-icon mx-auto mb-3" style="width:68px; height:68px; background:rgba(239, 68, 68, 0.2); color:#EF4444; font-size:2rem; border-radius:50%;">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h4 class="fw-bold text-danger">PHÁT HIỆN RỜI MÀN HÌNH THI!</h4>
+                    <p class="text-muted mb-3">Bạn vừa chuyển tab hoặc thu nhỏ trình duyệt. Hành vi này đã được ghi lại vào hệ thống giám thị (Lần 1 / 3).</p>
+                    <div class="alert alert-warning text-start small mb-0">
+                        <i class="fa-solid fa-circle-info me-1"></i> <b>Quy chế:</b> Nếu vi phạm quá 3 lần, bài thi sẽ bị tự động khóa và nộp bài ngay lập tức.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger w-100 fw-bold py-2" data-bs-dismiss="modal">TÔI ĐÃ HIỂU &amp; QUAY LẠI LÀM BÀI</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Confirm Modal -->
+    <div class="modal fade" id="submitConfirmModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-circle-question text-primary me-2"></i> Xác Nhận Nộp Bài Thi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-2">Bạn có chắc chắn muốn kết thúc bài thi sớm?</p>
+                    <div class="p-3 rounded-3 mb-3" style="background:var(--bg-surface-secondary);">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Số câu đã làm:</span>
+                            <b class="text-success" id="subDoneCount">2 / 28 Câu</b>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Thời gian còn lại:</span>
+                            <b class="text-danger" id="subRemainTime">44:32</b>
+                        </div>
+                    </div>
+                    <small class="text-muted">Sau khi nộp bài, điểm số sẽ được tự động chấm và cập nhật vào bảng xếp hạng máy chủ.</small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Làm Bài Tiếp</button>
+                    <button type="button" class="btn btn-success fw-bold px-4" onclick="finishExam()">Xác Nhận Nộp Bài</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Score Card Modal -->
+    <div class="modal fade" id="resultScoreModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center py-4 px-3">
+                <div class="stat-icon mx-auto mb-3" style="width:72px; height:72px; background:linear-gradient(135deg, #10B981, #059669); color:white; font-size:2.2rem; border-radius:50%; box-shadow:0 0 25px rgba(16, 185, 129, 0.5);">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h3 class="fw-bold mb-1">KẾT QUẢ THI ĐẠT ĐƯỢC</h3>
+                <p class="text-muted small mb-3">Thí sinh: <b>Nguyễn Hoàng Nam</b> &bull; Lớp 12A1</p>
+
+                <div class="p-3 rounded-4 mb-3" style="background:linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(16, 185, 129, 0.15)); border:1.5px solid var(--ac);">
+                    <div style="font-size:0.85rem; font-weight:800; color:var(--ac-light); text-transform:uppercase;">Tổng Điểm Chấm Tự Động</div>
+                    <h1 class="fw-extrabold text-success my-1 font-monospace" style="font-size:3.5rem;">9.25</h1>
+                    <span class="badge bg-success px-3 py-1">XẾP LOẠI: XUẤT SẮC</span>
+                </div>
+
+                <div class="text-start small mb-4 p-3 rounded-3" style="background:var(--bg-surface-secondary);">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Phần I (MCQ):</span>
+                        <b>17 / 18 câu đúng (4.25đ)</b>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Phần II (Đúng / Sai):</span>
+                        <b>4 / 4 câu đúng (4.00đ)</b>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Phần III (Điền số):</span>
+                        <b>4 / 6 câu đúng (1.00đ)</b>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary w-100 fw-bold py-2" data-bs-dismiss="modal" onclick="switchView('view-arena')">
+                    <i class="fa-solid fa-trophy me-1"></i> XEM BẢNG XẾP HẠNG ĐẤU TRƯỜNG LIVE
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Simulator Controller Scripts -->
+    <script>
+        // Web Audio Synthesizer for SFX
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const audio = AudioCtx ? new AudioCtx() : null;
+
+        function playSfx(freq = 520, type = 'sine', duration = 0.1) {
+            if (!audio) return;
+            try {
+                if (audio.state === 'suspended') audio.resume();
+                const now = audio.currentTime;
+                const osc = audio.createOscillator();
+                const gain = audio.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, now);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+                osc.connect(gain);
+                gain.connect(audio.destination);
+                osc.start(now);
+                osc.stop(now + duration);
+            } catch (e) {}
+        }
+
+        // Switch Top View
+        function switchView(viewId) {
+            playSfx(600, 'sine', 0.08);
+            document.querySelectorAll('.sim-view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.sim-pill-btn').forEach(b => b.classList.remove('active'));
+
+            const target = document.getElementById(viewId);
+            if (target) target.classList.add('active');
+
+            if (viewId === 'view-admin') document.getElementById('pill-admin').classList.add('active');
+            else if (viewId === 'view-proctor') document.getElementById('pill-proctor').classList.add('active');
+            else if (viewId === 'view-portal') document.getElementById('pill-portal').classList.add('active');
+            else if (viewId === 'view-exam') document.getElementById('pill-exam').classList.add('active');
+            else if (viewId === 'view-arena') document.getElementById('pill-arena').classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Toggle Theme
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            html.setAttribute('data-bs-theme', next);
+            document.getElementById('themeText').innerText = next === 'dark' ? 'Giao diện Tối' : 'Giao diện Sáng';
+            playSfx(440, 'triangle', 0.1);
+        }
+
+        // Admin Tab switching
+        function setAdminTab(tabId, el) {
+            playSfx(500, 'sine', 0.06);
+            document.querySelectorAll('.admin-nav-link').forEach(l => l.classList.remove('active'));
+            if (el) el.classList.add('active');
+
+            document.getElementById('tab-overview').style.display = 'none';
+            document.getElementById('tab-quizzes').style.display = 'none';
+            document.getElementById('tab-classes').style.display = 'none';
+            document.getElementById('tab-settings').style.display = 'none';
+
+            const tab = document.getElementById(tabId);
+            if (tab) tab.style.display = 'block';
+        }
+
+        // Toast Helper
+        function toast(msg) {
+            playSfx(700, 'sine', 0.12);
+            alert(msg);
+        }
+
+        // Student Portal Login
+        function startExamFromPortal() {
+            const name = document.getElementById('portalName').value;
+            const sbd = document.getElementById('portalSbd').value;
+            document.getElementById('examStudentName').innerText = name;
+            document.getElementById('examStudentSbd').innerText = sbd;
+
+            playSfx(880, 'triangle', 0.2);
+            switchView('view-exam');
+        }
+
+        // Select MCQ
+        let answeredTotal = 2;
+        function selectMcq(qNum, opt, el) {
+            playSfx(650, 'sine', 0.08);
+            const parent = el.closest('.q-card');
+            parent.querySelectorAll('.mcq-option').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+            markPalletDone(qNum);
+        }
+
+        function markPalletDone(qNum) {
+            const btns = document.querySelectorAll('.pallet-btn');
+            if (btns[qNum - 1]) {
+                if (!btns[qNum - 1].classList.contains('done')) {
+                    btns[qNum - 1].classList.add('done');
+                    answeredTotal++;
+                    document.getElementById('answeredCount').innerText = `Đã làm: ${answeredTotal} / 28`;
+                }
+            }
+        }
+
+        function scrollToQ(qId) {
+            const el = document.getElementById(qId);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.style.borderColor = 'var(--ac)';
+                setTimeout(() => el.style.borderColor = '', 1000);
+            }
+        }
+
+        // Anti-Cheat Trigger
+        function triggerCheatWarning() {
+            playSfx(300, 'sawtooth', 0.3);
+            const modal = new bootstrap.Modal(document.getElementById('cheatWarningModal'));
+            modal.show();
+        }
+
+        // Submit & Score Flow
+        function openSubmitConfirmModal() {
+            document.getElementById('subDoneCount').innerText = `${answeredTotal} / 28 Câu`;
+            document.getElementById('subRemainTime').innerText = document.getElementById('examTimer').innerText;
+            const modal = new bootstrap.Modal(document.getElementById('submitConfirmModal'));
+            modal.show();
+        }
+
+        function finishExam() {
+            bootstrap.Modal.getInstance(document.getElementById('submitConfirmModal')).hide();
+            playSfx(1046, 'triangle', 0.3);
+            confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+            
+            setTimeout(() => {
+                const resModal = new bootstrap.Modal(document.getElementById('resultScoreModal'));
+                resModal.show();
+            }, 400);
+        }
+
+        // Word Parser Simulation
+        function openWordParserModal() {
+            const modal = new bootstrap.Modal(document.getElementById('wordParserModal'));
+            modal.show();
+        }
+
+        function simulateWordUpload() {
+            playSfx(600, 'triangle', 0.15);
+            document.getElementById('wordParsedResult').style.display = 'block';
+        }
+
+        // Arena Simulation
+        let simCount = 0;
+        function simulateArenaStep() {
+            simCount++;
+            playSfx(880, 'sine', 0.1);
+            const r1 = document.getElementById('runner1');
+            const r2 = document.getElementById('runner2');
+            const r3 = document.getElementById('runner3');
+
+            r1.style.left = `${Math.min(92, 78 + simCount * 4)}%`;
+            r2.style.left = `${Math.min(85, 65 + simCount * 5)}%`;
+            r3.style.left = `${Math.min(78, 52 + simCount * 6)}%`;
+
+            if (simCount >= 4) {
+                triggerFireworks();
+            }
+        }
+
+        function triggerFireworks() {
+            playSfx(1046, 'triangle', 0.3);
+            confetti({ particleCount: 160, spread: 100, origin: { y: 0.5 } });
+        }
+
+        // Exam Timer Countdown
+        let secondsLeft = 44 * 60 + 32;
+        setInterval(() => {
+            if (secondsLeft > 0) {
+                secondsLeft--;
+                const m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
+                const s = (secondsLeft % 60).toString().padStart(2, '0');
+                const timerEl = document.getElementById('examTimer');
+                if (timerEl) timerEl.innerText = `${m}:${s}`;
+            }
+        }, 1000);
+
+        // Chart Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            // Score Chart
+            const ctx1 = document.getElementById('scoreChart');
+            if (ctx1) {
+                new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: ['0-2đ', '2-4đ', '4-5đ', '5-6đ', '6-7đ', '7-8đ', '8-9đ', '9-10đ'],
+                        datasets: [{
+                            label: 'Số Lượng Thí Sinh',
+                            data: [4, 12, 38, 75, 142, 110, 54, 15],
+                            backgroundColor: 'rgba(99, 102, 241, 0.75)',
+                            borderColor: '#6366F1',
+                            borderWidth: 1.5,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { grid: { color: 'rgba(255,255,255,0.06)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            // Question Type Chart
+            const ctx2 = document.getElementById('typeChart');
+            if (ctx2) {
+                new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Phần I: MCQ', 'Phần II: Đúng/Sai', 'Phần III: Điền Số'],
+                        datasets: [{
+                            data: [65, 20, 15],
+                            backgroundColor: ['#6366F1', '#10B981', '#F59E0B']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
