@@ -91,10 +91,13 @@
 
         /* Architectural Blueprint Grid Background with Ambient Spotlight */
         .slide {
-            position: fixed;
+            position: absolute;
             inset: 0;
-            padding: clamp(18px, 3vh, 36px) clamp(24px, 5.5vw, 72px) clamp(56px, 8vh, 76px);
-            display: none !important;
+            padding: clamp(24px, 4vh, 40px) clamp(24px, 4vw, 56px) clamp(45px, 6.5vh, 60px);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
@@ -105,8 +108,7 @@
                 linear-gradient(90deg, var(--ln) 1px, transparent 1px);
             background-size: 100% 100%, 7vw 7vw, 7vw 7vw;
             background-position: center top, -1px -1px, -1px -1px;
-            overflow-y: auto;
-            overflow-x: hidden;
+            overflow: hidden !important;
             scrollbar-width: none !important;
             -ms-overflow-style: none !important;
             z-index: 1;
@@ -127,19 +129,21 @@
 
         .slide.fx.on {
             display: grid !important;
-            grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.45fr);
-            gap: clamp(20px, 3.2vw, 48px);
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+            gap: clamp(20px, 3.2vw, 44px);
             align-items: center;
             align-content: center;
             justify-content: center;
             width: 100%;
             height: 100%;
-            max-width: 1720px;
+            max-width: 1560px;
+            max-height: calc(100vh - clamp(75px, 10.5vh, 100px));
             margin: 0 auto;
+            box-sizing: border-box;
         }
 
         .slide.fx.on[data-side="r"] {
-            grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.95fr);
+            grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
         }
         .slide.fx.on[data-side="r"] .ph { grid-column: 1; }
         .slide.fx.on[data-side="r"] .tx { grid-column: 2; }
@@ -429,27 +433,32 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.1em 5vw;
-            font-size: 0.82em;
-            letter-spacing: 0.1em;
+            padding: 0.65em 3vw;
+            font-size: 0.78em;
+            letter-spacing: 0.08em;
             color: var(--mu);
             z-index: 20;
             pointer-events: none;
             font-family: 'JetBrains Mono', monospace;
             text-transform: uppercase;
-            background: linear-gradient(0deg, var(--bg) 75%, transparent);
+            background: linear-gradient(0deg, var(--bg) 80%, transparent);
         }
         .ft b { color: var(--ac); font-weight: 800; }
         .ft #fn {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            position: static;
+            transform: none;
             color: var(--fg);
             font-weight: 700;
-            max-width: 45vw;
+            max-width: 42vw;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            text-align: center;
+            margin: 0 auto;
+        }
+        .ft #si {
+            margin-right: 46px;
+            font-weight: 700;
         }
 
         /* Collapsible Floating Dock with Glowing Arrow */
@@ -642,6 +651,30 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            max-height: 100%;
+        }
+        .slide.fx .tx h2 {
+            font-size: clamp(20px, 2.3vw, 34px);
+            margin-bottom: 0.22em;
+            line-height: 1.22;
+        }
+        .slide.fx .tx .eb {
+            font-size: clamp(12px, 0.88vw, 14px);
+            margin-bottom: 0.35em;
+        }
+        .slide.fx .tx .l {
+            margin-top: clamp(6px, 1.2vh, 14px) !important;
+            gap: clamp(5px, 1.1vh, 10px);
+        }
+        .slide.fx .tx .l li {
+            font-size: clamp(13px, 0.92vw, 15px);
+            padding: 0.22em 0 0.22em 2.2em;
+            line-height: 1.4;
+        }
+        .slide.fx .tx .sb {
+            font-size: clamp(12px, 0.85vw, 14px);
+            line-height: 1.38;
+            margin-top: 0.18em;
         }
 
         .slide.fx .tx .l {
@@ -651,13 +684,13 @@
         .slide.fx .ph {
             position: relative;
             width: 100%;
-            max-width: min(920px, 58vw);
-            max-height: calc(100vh - clamp(100px, 14vh, 140px));
-            border-radius: 16px;
+            max-width: min(760px, 52vw);
+            max-height: calc(100vh - clamp(110px, 15vh, 150px));
+            border-radius: 14px;
             border: 1px solid var(--ph-border);
             box-shadow: var(--ph-shadow);
             background: var(--ph-bg);
-            padding: 7px 8px 9px 8px;
+            padding: 6px 8px 8px 8px;
             justify-self: center;
             transform: perspective(1400px) rotateY(var(--ry, 0deg)) rotateX(var(--rx, 0deg));
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s, border-color 0.4s;
@@ -712,10 +745,10 @@
         .slide.fx .ph img {
             width: 100%;
             height: auto;
-            max-height: clamp(240px, calc(100vh - clamp(150px, 18vh, 210px)), 580px);
+            max-height: calc(100vh - clamp(160px, 22vh, 210px));
             object-fit: contain;
             display: block;
-            border-radius: 8px;
+            border-radius: 6px;
             transition: transform 0.35s ease;
         }
         .slide.fx .ph:hover img {
@@ -997,8 +1030,29 @@
         /* Responsive */
         @media(max-height: 750px) {
             .slide {
-                padding: 12px clamp(16px, 4vw, 40px) 48px;
-            }
+            position: absolute;
+            inset: 0;
+            padding: clamp(24px, 4vh, 40px) clamp(24px, 4vw, 56px) clamp(45px, 6.5vh, 60px);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            background-color: var(--bg);
+            background-image: 
+                var(--radial-glow),
+                linear-gradient(var(--ln) 1px, transparent 1px),
+                linear-gradient(90deg, var(--ln) 1px, transparent 1px);
+            background-size: 100% 100%, 7vw 7vw, 7vw 7vw;
+            background-position: center top, -1px -1px, -1px -1px;
+            overflow: hidden !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+            z-index: 1;
+            box-sizing: border-box;
+        }
             h2 {
                 font-size: clamp(17px, 2.6vh, 25px);
             }
@@ -1012,13 +1066,13 @@
             .slide.fx .ph {
             position: relative;
             width: 100%;
-            max-width: min(920px, 58vw);
-            max-height: calc(100vh - clamp(100px, 14vh, 140px));
-            border-radius: 16px;
+            max-width: min(760px, 52vw);
+            max-height: calc(100vh - clamp(110px, 15vh, 150px));
+            border-radius: 14px;
             border: 1px solid var(--ph-border);
             box-shadow: var(--ph-shadow);
             background: var(--ph-bg);
-            padding: 7px 8px 9px 8px;
+            padding: 6px 8px 8px 8px;
             justify-self: center;
             transform: perspective(1400px) rotateY(var(--ry, 0deg)) rotateX(var(--rx, 0deg));
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s, border-color 0.4s;
@@ -1030,10 +1084,10 @@
             .slide.fx .ph img {
             width: 100%;
             height: auto;
-            max-height: clamp(240px, calc(100vh - clamp(150px, 18vh, 210px)), 580px);
+            max-height: calc(100vh - clamp(160px, 22vh, 210px));
             object-fit: contain;
             display: block;
-            border-radius: 8px;
+            border-radius: 6px;
             transition: transform 0.35s ease;
         }
             .st b {
@@ -1046,18 +1100,18 @@
 
         @media(max-width: 900px) {
             .slide.fx.on, .slide.fx.on[data-side="r"] {
-            grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.95fr);
+            grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
         }
             .slide.fx .ph {
             position: relative;
             width: 100%;
-            max-width: min(920px, 58vw);
-            max-height: calc(100vh - clamp(100px, 14vh, 140px));
-            border-radius: 16px;
+            max-width: min(760px, 52vw);
+            max-height: calc(100vh - clamp(110px, 15vh, 150px));
+            border-radius: 14px;
             border: 1px solid var(--ph-border);
             box-shadow: var(--ph-shadow);
             background: var(--ph-bg);
-            padding: 7px 8px 9px 8px;
+            padding: 6px 8px 8px 8px;
             justify-self: center;
             transform: perspective(1400px) rotateY(var(--ry, 0deg)) rotateX(var(--rx, 0deg));
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s, border-color 0.4s;
@@ -1066,16 +1120,79 @@
             flex-direction: column;
             box-sizing: border-box;
         }
-            .slide.fx .tx { 
-                order: 2;
-                width: 100%;
-            }
-            .slide { 
-                padding: 18px 5vw 75px; 
-            }
+            .slide.fx .tx {
+            min-width: 0;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-height: 100%;
+        }
+        .slide.fx .tx h2 {
+            font-size: clamp(20px, 2.3vw, 34px);
+            margin-bottom: 0.22em;
+            line-height: 1.22;
+        }
+        .slide.fx .tx .eb {
+            font-size: clamp(12px, 0.88vw, 14px);
+            margin-bottom: 0.35em;
+        }
+        .slide.fx .tx .l {
+            margin-top: clamp(6px, 1.2vh, 14px) !important;
+            gap: clamp(5px, 1.1vh, 10px);
+        }
+        .slide.fx .tx .l li {
+            font-size: clamp(13px, 0.92vw, 15px);
+            padding: 0.22em 0 0.22em 2.2em;
+            line-height: 1.4;
+        }
+        .slide.fx .tx .sb {
+            font-size: clamp(12px, 0.85vw, 14px);
+            line-height: 1.38;
+            margin-top: 0.18em;
+        }
+            .slide {
+            position: absolute;
+            inset: 0;
+            padding: clamp(24px, 4vh, 40px) clamp(24px, 4vw, 56px) clamp(45px, 6.5vh, 60px);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            background-color: var(--bg);
+            background-image: 
+                var(--radial-glow),
+                linear-gradient(var(--ln) 1px, transparent 1px),
+                linear-gradient(90deg, var(--ln) 1px, transparent 1px);
+            background-size: 100% 100%, 7vw 7vw, 7vw 7vw;
+            background-position: center top, -1px -1px, -1px -1px;
+            overflow: hidden !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+            z-index: 1;
+            box-sizing: border-box;
+        }
             .st { grid-template-columns: 1fr; }
             .st.n6 { grid-template-columns: 1fr; }
-            .ft #fn { display: none; }
+            .ft #fn {
+            position: static;
+            transform: none;
+            color: var(--fg);
+            font-weight: 700;
+            max-width: 42vw;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+            margin: 0 auto;
+        }
+        .ft #si {
+            margin-right: 46px;
+            font-weight: 700;
+        }
         }
     
         /* Single Download Modal Hero Styling */
