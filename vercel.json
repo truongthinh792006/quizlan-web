@@ -4,12 +4,10 @@
   "trailingSlash": false,
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
-    { "source": "/presentation", "destination": "/presentation.html" },
-    { "source": "/presentation.html", "destination": "/presentation.html" },
+    { "source": "/presentation", "destination": "/index.html" },
+    { "source": "/presentation.html", "destination": "/index.html" },
     { "source": "/simulator", "destination": "/simulator.html" },
     { "source": "/simulator.html", "destination": "/simulator.html" },
-    { "source": "/guide", "destination": "/guide.html" },
-    { "source": "/guide.html", "destination": "/guide.html" },
     { "source": "/images/(.*)", "destination": "/images/$1" }
   ],
   "headers": [
