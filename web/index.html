@@ -500,18 +500,30 @@
             align-items: center;
             gap: 0.35em;
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            transform-origin: right center;
         }
-        .bt-wrapper.collapsed .bt {
+        .bt-extra {
+            display: flex;
+            align-items: center;
+            gap: 0.35em;
+            max-width: 0;
             opacity: 0;
             visibility: hidden;
-            transform: translateX(20px) scale(0.92);
-            pointer-events: none;
-            width: 0;
-            margin: 0;
-            padding: 0;
-            gap: 0;
             overflow: hidden;
+            transform: scaleX(0.8);
+            transform-origin: left center;
+            transition: max-width 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.28s ease,
+                        transform 0.35s ease,
+                        visibility 0.35s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .bt-wrapper.expanded .bt-extra {
+            max-width: 700px;
+            opacity: 1;
+            visibility: visible;
+            transform: scaleX(1);
+            pointer-events: auto;
         }
         /* Glowing Toggle Arrow Button */
         .dock-toggle-btn {
@@ -539,10 +551,7 @@
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             font-size: 0.95rem;
         }
-        .bt-wrapper.collapsed .dock-toggle-btn {
-            animation: pulseGlow 1.6s infinite ease-in-out;
-        }
-        .bt-wrapper.collapsed .dock-toggle-btn i {
+        .bt-wrapper.expanded .dock-toggle-btn i {
             transform: rotate(180deg);
         }
         @keyframes pulseGlow {
@@ -1340,6 +1349,7 @@
     <!-- Floating Collapsible Navigation Bar with Glowing Toggle Arrow -->
     <div class="bt-wrapper" id="btWrapper">
         <div class="bt" id="btContainer">
+            <!-- 4 Nút cơ bản mặc định luôn hiện -->
             <button id="bh" aria-label="Về Slide Đầu (Home)" title="Về Slide Đầu (Home)">
                 <i class="fa-solid fa-house"></i>
             </button>
@@ -1349,24 +1359,28 @@
             <button id="b1" aria-label="Slide sau (→)" title="Slide sau (→)">
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
-            <button id="bg" aria-label="Danh sách slide (G)" title="Danh sách slide (G)">
-                <i class="fa-solid fa-grid-2"></i> <span>G &bull; Menu</span>
-            </button>
             <button id="bf" aria-label="Toàn màn hình (F)" title="Toàn màn hình (F)">
                 <i class="fa-solid fa-expand"></i> <span>F</span>
             </button>
-            <button id="bt" aria-label="Đổi giao diện Sáng/Tối (T)" title="Đổi giao diện (T)">
-                <i class="fa-solid fa-circle-half-stroke"></i> <span>T</span>
-            </button>
-                        <a href="simulator.html" target="_blank" id="bs" class="dock-btn-link" aria-label="Web Mô Phỏng 99%" title="Trải nghiệm Web Mô Phỏng Tương Tác 99%">
-                <i class="fa-solid fa-laptop-code text-cyan-400"></i> <span>Mô Phỏng Demo</span>
-            </a>
-            <button id="bc" aria-label="Tải về" title="Tải phần mềm QuizLAN Pro v2.0.0 & Tài liệu GDPT 2018">
-                <i class="fa-solid fa-cloud-arrow-down text-emerald-400"></i> <span>Tải về</span>
-            </button>
+
+            <!-- Nhóm nút chức năng mở rộng (mặc định ẩn, bấm nút tròn mũi tên để mở rộng) -->
+            <div class="bt-extra" id="btExtra">
+                <button id="bg" aria-label="Danh sách slide (G)" title="Danh sách slide (G)">
+                    <i class="fa-solid fa-grid-2"></i> <span>G &bull; Menu</span>
+                </button>
+                <button id="bt" aria-label="Đổi giao diện Sáng/Tối (T)" title="Đổi giao diện (T)">
+                    <i class="fa-solid fa-circle-half-stroke"></i> <span>T</span>
+                </button>
+                <a href="simulator.html" target="_blank" id="bs" class="dock-btn-link" aria-label="Web Mô Phỏng 99%" title="Trải nghiệm Web Mô Phỏng Tương Tác 99%">
+                    <i class="fa-solid fa-laptop-code text-cyan-400"></i> <span>Mô Phỏng Demo</span>
+                </a>
+                <button id="bc" aria-label="Tải về" title="Tải phần mềm QuizLAN Pro v2.0.0 & Tài liệu GDPT 2018">
+                    <i class="fa-solid fa-cloud-arrow-down text-emerald-400"></i> <span>Tải về</span>
+                </button>
+            </div>
         </div>
-        <button id="dockToggleBtn" class="dock-toggle-btn" aria-label="Mở/Đóng thanh điều khiển" title="Bấm để ẩn/hiện thanh công cụ">
-            <i class="fa-solid fa-angles-right"></i>
+        <button id="dockToggleBtn" class="dock-toggle-btn" aria-label="Mở rộng / Thu gọn tính năng" title="Bấm để mở rộng / thu gọn các nút chức năng">
+            <i class="fa-solid fa-angles-left"></i>
         </button>
     </div>
 
@@ -1954,12 +1968,12 @@
             }
         } catch(e) {}
 
-        // Toggle Floating Dock (Collapsible Glowing Arrow)
+        // Toggle Floating Dock Extra Buttons (Collapsible Glowing Arrow)
         const dockWrapper = document.getElementById('btWrapper');
         const dockToggleBtn = document.getElementById('dockToggleBtn');
         function toggleDock() {
             if (dockWrapper) {
-                dockWrapper.classList.toggle('collapsed');
+                dockWrapper.classList.toggle('expanded');
                 playSlideSfx();
             }
         }
