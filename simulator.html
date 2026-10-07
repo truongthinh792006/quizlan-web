@@ -20,10 +20,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
 
-    <!-- KaTeX for Math Formulas -->
+    <!-- KaTeX for Math Formulas (GDPT 2018 Formula Rendering) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="if(window.initKaTeX) initKaTeX();"></script>
 
     <!-- Chart.js & Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1528,6 +1528,36 @@
             } catch (e) {}
         }
 
+                // KaTeX Math Formula Renderer with full GDPT 2018 LaTeX support ($...$, $$...$$, \(...\))
+        function renderAllMath(target = document.body) {
+            if (window.renderMathInElement) {
+                try {
+                    renderMathInElement(target, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false },
+                            { left: '\\(', right: '\\)', display: false },
+                            { left: '\\[', right: '\\]', display: true }
+                        ],
+                        throwOnError: false,
+                        ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "option"]
+                    });
+                } catch (e) {
+                    console.warn('KaTeX render warning:', e);
+                }
+            }
+        }
+
+        function initKaTeX() {
+            renderAllMath();
+            setTimeout(renderAllMath, 80);
+            setTimeout(renderAllMath, 300);
+            setTimeout(renderAllMath, 1000);
+        }
+
+        window.addEventListener('DOMContentLoaded', initKaTeX);
+        window.addEventListener('load', initKaTeX);
+
         // Switch Top View
         function switchView(viewId) {
             playSfx(600, 'sine', 0.08);
@@ -1535,7 +1565,11 @@
             document.querySelectorAll('.sim-pill-btn').forEach(b => b.classList.remove('active'));
 
             const target = document.getElementById(viewId);
-            if (target) target.classList.add('active');
+            if (target) {
+                target.classList.add('active');
+                renderAllMath(target);
+                setTimeout(() => renderAllMath(target), 50);
+            }
 
             if (viewId === 'view-admin') document.getElementById('pill-admin').classList.add('active');
             else if (viewId === 'view-proctor') document.getElementById('pill-proctor').classList.add('active');
